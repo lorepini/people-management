@@ -85,6 +85,20 @@ body.flash-bad{background:var(--bad-soft)}
   padding:6px 12px;border-radius:8px;font-size:.85rem;font-weight:600;
 }
 .home-btn:hover{background:#fff;color:var(--ink)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.timer{
+  display:inline-flex;align-items:center;gap:6px;
+  font-variant-numeric:tabular-nums;font-weight:700;font-size:.92rem;
+  color:var(--ink);padding:6px 12px;border-radius:8px;
+  background:#f3f4f6;border:1px solid var(--line);min-width:78px;justify-content:center;
+}
+.timer.paused{color:var(--muted);background:#fafafa}
+.timer .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--good);
+  animation:pulse 1.4s ease-in-out infinite;
+}
+.timer.paused .dot{background:var(--muted);animation:none}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* ---------- screens ---------- */
 .screen{display:none;animation:fade .25s ease}
@@ -200,7 +214,7 @@ body.flash-bad{background:var(--bad-soft)}
 }
 .end-card h2{font-size:1.4rem;margin-bottom:6px}
 .end-card .sub{color:var(--muted);margin-bottom:22px}
-.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.end-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
 .end-stat{background:#f8fafc;border-radius:10px;padding:14px 6px}
 .end-stat .v{font-size:1.6rem;font-weight:700;color:var(--ink)}
 .end-stat .l{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
@@ -222,7 +236,7 @@ body.flash-bad{background:var(--bad-soft)}
   .question-card{padding:20px 18px}
   .q-text{font-size:1rem}
   .opt{font-size:.92rem;padding:12px 14px}
-  .end-stats{grid-template-columns:repeat(3,1fr)}
+  .end-stats{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -2282,7 +2296,10 @@ body.flash-bad{background:var(--bad-soft)}
         <h1 id="quiz-title">Quiz</h1>
         <div class="sub" id="quiz-sub"></div>
       </div>
-      <button class="home-btn" id="quit-btn">Quit</button>
+      <div class="topbar-right">
+        <div class="timer" id="timer" title="Session timer (pauses on break)"><span class="dot"></span><span id="timer-text">00:00</span></div>
+        <button class="home-btn" id="quit-btn">Quit</button>
+      </div>
     </div>
 
     <div class="progress-wrap">
@@ -2313,7 +2330,9 @@ body.flash-bad{background:var(--bad-soft)}
         <div class="end-stat"><div class="v" id="stat-answered">0</div><div class="l">Answered</div></div>
         <div class="end-stat"><div class="v" id="stat-correct">0</div><div class="l">Correct first try</div></div>
         <div class="end-stat"><div class="v" id="stat-accuracy">0%</div><div class="l">Accuracy</div></div>
+        <div class="end-stat"><div class="v" id="stat-time">00:00</div><div class="l">Total time</div></div>
       </div>
+      <div class="sub" id="stat-avg-time" style="margin-top:-12px;margin-bottom:18px;font-size:.82rem"></div>
       <div class="earned-medals" id="earned-medals"></div>
       <div class="end-actions">
         <button class="primary" id="end-again">Play again</button>
@@ -2435,6 +2454,58 @@ function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 // ---- Quiz state ----
 let quizState = null;
 
+// ---- Session timer (pauses on break modal) ----
+const timer = {
+  startedAt: 0,       // ms epoch at last resume
+  accumulated: 0,     // ms accumulated across paused segments
+  intervalId: null,
+  running: false,
+  reset(){
+    this.stop();
+    this.startedAt = 0;
+    this.accumulated = 0;
+    renderTimer(0);
+  },
+  start(){
+    if (this.running) return;
+    this.startedAt = Date.now();
+    this.running = true;
+    document.getElementById('timer').classList.remove('paused');
+    this.intervalId = setInterval(() => renderTimer(this.elapsedMs()), 1000);
+    renderTimer(this.elapsedMs());
+  },
+  pause(){
+    if (!this.running) return;
+    this.accumulated += Date.now() - this.startedAt;
+    this.running = false;
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    document.getElementById('timer').classList.add('paused');
+  },
+  stop(){
+    if (this.running){
+      this.accumulated += Date.now() - this.startedAt;
+      this.running = false;
+    }
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+  },
+  elapsedMs(){
+    return this.accumulated + (this.running ? Date.now() - this.startedAt : 0);
+  },
+};
+
+function formatTime(ms){
+  const totalSec = Math.floor(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function renderTimer(ms){
+  document.getElementById('timer-text').textContent = formatTime(ms);
+}
+
 function startQuiz(blocks, title){
   // Build queue. For each question keep meta about which block it came from.
   const queue = [];
@@ -2470,6 +2541,8 @@ function startQuiz(blocks, title){
   showScreen('quiz');
   document.getElementById('quiz-title').textContent = title;
   document.getElementById('quiz-sub').textContent = `${queue.length} questions to master`;
+  timer.reset();
+  timer.start();
   nextQuestion();
 }
 
@@ -2576,14 +2649,16 @@ function handlePostAnswer(){
 }
 
 function showBreakModal(){
+  timer.pause();
   const modal = document.getElementById('break-modal');
   document.getElementById('break-text').textContent =
-    `You've answered ${quizState.sessionAnswered} questions, ${quizState.queue.length} left in the pool. Keep going?`;
+    `You've answered ${quizState.sessionAnswered} questions in ${formatTime(timer.elapsedMs())}. ${quizState.queue.length} left in the pool — keep going?`;
   modal.classList.add('show');
 }
 
 document.getElementById('break-continue').onclick = () => {
   document.getElementById('break-modal').classList.remove('show');
+  timer.start();
   nextQuestion();
 };
 document.getElementById('break-stop').onclick = () => {
@@ -2593,6 +2668,7 @@ document.getElementById('break-stop').onclick = () => {
 
 document.getElementById('quit-btn').onclick = () => {
   if (!quizState || confirm('Quit this session? Progress for this session will be lost.')){
+    timer.stop();
     quizState = null;
     showScreen('home');
     renderHome();
@@ -2609,6 +2685,7 @@ function updateProgressBar(){
 
 function finishQuiz(completed){
   if (!quizState) return;
+  timer.stop();
   const earned = [];
 
   // Award medals ONLY if the session actually completed all questions
@@ -2644,9 +2721,14 @@ function finishQuiz(completed){
   document.getElementById('end-sub').textContent = completed
     ? quizState.title
     : `${quizState.queue.length} questions still unmastered in ${quizState.title}`;
+  const totalMs = timer.elapsedMs();
   document.getElementById('stat-answered').textContent = answered;
   document.getElementById('stat-correct').textContent = correct;
   document.getElementById('stat-accuracy').textContent = accuracy + '%';
+  document.getElementById('stat-time').textContent = formatTime(totalMs);
+  const avgSec = answered ? Math.round((totalMs / 1000) / answered) : 0;
+  document.getElementById('stat-avg-time').textContent =
+    answered ? `Average ${avgSec}s per question` : '';
 
   const earnedEl = document.getElementById('earned-medals');
   earnedEl.innerHTML = earned.map(m => {
