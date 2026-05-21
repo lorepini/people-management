@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essay Practice — People Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --b1:#5b6cff;  --b1-soft:#eef0ff;
+  --b2:#d97706;  --b2-soft:#fef3c7;
+  --b3:#0d9488;  --b3-soft:#ccfbf1;
+  --b4:#e11d48;  --b4-soft:#ffe4e6;
+  --b5:#15803d;  --b5-soft:#dcfce7;
+  --b6:#7c3aed;  --b6-soft:#ede9fe;
+  --bg:#fbfaf7; --panel:#fff; --ink:#1c1c1f; --body:#2d2d33;
+  --muted:#6b7280; --line:#e8e6df; --soft:#f3f1ec;
+  --serif:'Fraunces', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --maxw:840px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  font-family:var(--serif);background:var(--bg);color:var(--body);
+  line-height:1.65;font-size:18px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:inherit}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,247,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-family:var(--sans)}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:var(--serif);font-weight:500;font-size:.98rem;color:var(--ink);text-decoration:none}
+.nav-brand i{font-style:italic;color:var(--muted);font-weight:400}
+.nav-jumps{display:flex;flex-wrap:wrap;gap:4px;font-family:var(--sans);font-size:.78rem;font-weight:600}
+.nav-jump{padding:4px 8px;border-radius:5px;text-decoration:none;color:var(--muted);transition:all .15s}
+.nav-jump:hover{background:var(--soft);color:var(--ink)}
+.nav-jump.b1:hover{background:var(--b1-soft);color:var(--b1)}
+.nav-jump.b2:hover{background:var(--b2-soft);color:var(--b2)}
+.nav-jump.b3:hover{background:var(--b3-soft);color:var(--b3)}
+.nav-jump.b4:hover{background:var(--b4-soft);color:var(--b4)}
+.nav-jump.b5:hover{background:var(--b5-soft);color:var(--b5)}
+.nav-jump.b6:hover{background:var(--b6-soft);color:var(--b6)}
+
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* hero */
+.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.hero-eyebrow{font-family:var(--sans);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3rem);font-weight:500;font-variation-settings:"opsz" 144;line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--muted);font-weight:400}
+.hero .deck{font-size:1.08rem;color:var(--body);max-width:600px;margin-bottom:24px}
+.hero-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.tool-btn{font-family:var(--sans);font-size:.82rem;font-weight:600;padding:9px 14px;border-radius:6px;text-decoration:none;border:1px solid var(--ink);color:var(--ink);background:transparent;transition:all .15s}
+.tool-btn:hover{background:var(--ink);color:var(--bg)}
+.tool-btn.filled{background:var(--ink);color:var(--bg)}
+.tool-btn.filled:hover{background:transparent;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px;font-family:var(--sans);font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.legend b{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
+.legend .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+/* question card */
+.q{padding:48px 0 32px;border-bottom:1px solid var(--line);scroll-margin-top:72px}
+.q-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:14px}
+.q-num{
+  flex-shrink:0;width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);font-weight:700;font-size:1rem;color:#fff;
+}
+.q[data-b="1"] .q-num{background:var(--b1)}
+.q[data-b="2"] .q-num{background:var(--b2)}
+.q[data-b="3"] .q-num{background:var(--b3)}
+.q[data-b="4"] .q-num{background:var(--b4)}
+.q[data-b="5"] .q-num{background:var(--b5)}
+.q[data-b="6"] .q-num{background:var(--b6)}
+.q-meta{flex:1}
+.q-block{font-family:var(--sans);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
+.q[data-b="1"] .q-block{color:var(--b1)}
+.q[data-b="2"] .q-block{color:var(--b2)}
+.q[data-b="3"] .q-block{color:var(--b3)}
+.q[data-b="4"] .q-block{color:var(--b4)}
+.q[data-b="5"] .q-block{color:var(--b5)}
+.q[data-b="6"] .q-block{color:var(--b6)}
+.q-text{font-family:var(--serif);font-size:1.32rem;font-weight:500;color:var(--ink);line-height:1.35;letter-spacing:-.01em}
+.q-original{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:.95rem;margin-top:6px}
+.q-original::before{content:"in Spanish:  "}
+
+/* answer */
+.a{margin-top:18px}
+.a-label{
+  font-family:var(--sans);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);margin:24px 0 10px;
+}
+.a-lead{font-family:var(--serif);font-size:1.05rem;color:var(--body);margin-bottom:18px}
+.a-lead strong{color:var(--ink);font-weight:600}
+.a p{margin-bottom:16px}
+.a p strong{color:var(--ink);font-weight:600}
+.a ul,.a ol{margin:0 0 16px 22px;font-family:var(--sans);font-size:.96rem}
+.a li{margin-bottom:6px}
+.a li strong{color:var(--ink)}
+
+/* diagram */
+.diagram{
+  margin:22px 0;padding:20px;background:#fff;border:1px solid var(--line);border-radius:10px;
+}
+.diagram svg{width:100%;height:auto;display:block}
+.diagram-cap{font-family:var(--sans);font-size:.8rem;color:var(--muted);font-style:italic;margin-top:10px;text-align:center}
+
+/* highlight boxes */
+.box{margin:22px 0;padding:18px 22px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.box h5{font-family:var(--sans);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink);margin-bottom:10px}
+.box ul{margin-left:18px;font-family:var(--sans);font-size:.92rem}
+.box li{margin-bottom:5px}
+.box.case{background:var(--soft)}
+.q[data-b="1"] .box.case{background:var(--b1-soft)}
+.q[data-b="2"] .box.case{background:var(--b2-soft)}
+.q[data-b="3"] .box.case{background:var(--b3-soft)}
+.q[data-b="4"] .box.case{background:var(--b4-soft)}
+.q[data-b="5"] .box.case{background:var(--b5-soft)}
+.q[data-b="6"] .box.case{background:var(--b6-soft)}
+.box.case h5{color:inherit}
+.q[data-b="1"] .box.case h5{color:var(--b1)}
+.q[data-b="2"] .box.case h5{color:var(--b2)}
+.q[data-b="3"] .box.case h5{color:var(--b3)}
+.q[data-b="4"] .box.case h5{color:var(--b4)}
+.q[data-b="5"] .box.case h5{color:var(--b5)}
+.q[data-b="6"] .box.case h5{color:var(--b6)}
+
+.cite-row{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 4px}
+.cite{
+  display:inline-block;padding:3px 9px;border-radius:4px;
+  font-family:var(--sans);font-size:.74rem;font-weight:600;
+  background:#fff;border:1px solid var(--line);color:var(--ink);
+}
+
+footer{padding:48px 0;text-align:center;color:var(--muted);font-family:var(--sans);font-size:.84rem;background:var(--bg);border-top:1px solid var(--line)}
+footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:600px){
+  body{font-size:17px}
+  .hero{padding:40px 0 28px}
+  .q{padding:36px 0 24px}
+  .q-text{font-size:1.15rem}
+  .q-num{width:38px;height:38px;font-size:.9rem}
+  .nav-jumps{font-size:.7rem;gap:2px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">Essay practice <i>· 20 open-ended questions</i></a>
+    <div class="nav-jumps">
+      <a class="nav-jump b5" href="#q1">Q1</a>
+      <a class="nav-jump b4" href="#q2">Q2</a>
+      <a class="nav-jump b1" href="#q3">Q3</a>
+      <a class="nav-jump b2" href="#q4">Q4</a>
+      <a class="nav-jump b1" href="#q5">Q5</a>
+      <a class="nav-jump b1" href="#q6">Q6</a>
+      <a class="nav-jump b1" href="#q7">Q7</a>
+      <a class="nav-jump b1" href="#q8">Q8</a>
+      <a class="nav-jump b2" href="#q9">Q9</a>
+      <a class="nav-jump b2" href="#q10">Q10</a>
+      <a class="nav-jump b2" href="#q11">Q11</a>
+      <a class="nav-jump b3" href="#q12">Q12</a>
+      <a class="nav-jump b3" href="#q13">Q13</a>
+      <a class="nav-jump b3" href="#q14">Q14</a>
+      <a class="nav-jump b4" href="#q15">Q15</a>
+      <a class="nav-jump b4" href="#q16">Q16</a>
+      <a class="nav-jump b4" href="#q17">Q17</a>
+      <a class="nav-jump b5" href="#q18">Q18</a>
+      <a class="nav-jump b5" href="#q19">Q19</a>
+      <a class="nav-jump b6" href="#q20">Q20</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero-eyebrow">Essay practice · open-ended questions</div>
+    <h1>20 questions to master <em>before the exam</em></h1>
+    <p class="deck">The first five are the example questions you were given. The next fifteen are in exactly the same style — broad, conceptual, anchored in a framework with cases to cite. Each answer is structured the way you'd write it in an exam: lead sentence → numbered components → diagram → class example → key authors.</p>
+    <div class="hero-tools">
+      <a class="tool-btn" href="index.html">← Study companion</a>
+      <a class="tool-btn filled" href="mcq_trainer.html">Practice MCQs ↗</a>
+      <a class="tool-btn" href="frameworks_cheatsheet.pdf">Cheat sheet (PDF)</a>
+    </div>
+    <div class="legend">
+      <b><span class="dot" style="background:var(--b1)"></span>Block 1 — Foundations</b>
+      <b><span class="dot" style="background:var(--b2)"></span>Block 2 — Job design</b>
+      <b><span class="dot" style="background:var(--b3)"></span>Block 3 — Selection &amp; training</b>
+      <b><span class="dot" style="background:var(--b4)"></span>Block 4 — Performance mgmt</b>
+      <b><span class="dot" style="background:var(--b5)"></span>Block 5 — Compensation</b>
+      <b><span class="dot" style="background:var(--b6)"></span>Block 6 — Unions</b>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ Q1 ═══════════ -->
+<article class="q" id="q1" data-b="5">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">1</div>
+      <div class="q-meta">
+        <div class="q-block">Block 5 · Compensation</div>
+        <div class="q-text">What are the four basic areas to understand a compensation policy and judge whether it fits the organization?</div>
+        <div class="q-original">¿Cuáles son las 4 grandes áreas básicas a la hora de entender una política retributiva y de ver si es adecuada para la organización?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">A compensation policy is "adequate" only when it passes four tests at once — they're known as <strong>the Four Criteria of a Competitive Compensation System</strong>. Any pay design that fails one of them creates predictable problems (turnover, demotivation, legal risk, or budget blowout).</p>
+
+      <ul>
+        <li><strong>Internal equity</strong> — equal pay for jobs of <em>equal worth</em>. Achieved via job analysis + job evaluation. Fails → resentment, perceived unfairness inside the firm.</li>
+        <li><strong>External equity (competitiveness)</strong> — pay at par with the industry. Achieved via salary surveys / benchmarking. Fails → attraction and retention collapse (the case where wages slip 10% below market and turnover spikes).</li>
+        <li><strong>Performance link</strong> — pay tied to performance through merit increases (permanent) or incentives (variable, re-earned). Fails → no behavioural traction; pay becomes pure entitlement.</li>
+        <li><strong>Cost / benefit (feasibility)</strong> — the firm can actually afford it and the returns are measurable. Fails → budget crisis or unsustainable rewards.</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11.5">
+            <rect x="40" y="40" width="240" height="70" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="160" y="65" text-anchor="middle" font-weight="700" fill="#15803d">INTERNAL equity</text>
+            <text x="160" y="85" text-anchor="middle" fill="#1c1c1f">job analysis + evaluation</text>
+            <text x="160" y="100" text-anchor="middle" fill="#6b7280" font-size="10">equal pay for equal worth</text>
+
+            <rect x="320" y="40" width="240" height="70" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="440" y="65" text-anchor="middle" font-weight="700" fill="#15803d">EXTERNAL equity</text>
+            <text x="440" y="85" text-anchor="middle" fill="#1c1c1f">salary surveys</text>
+            <text x="440" y="100" text-anchor="middle" fill="#6b7280" font-size="10">par with the industry</text>
+
+            <rect x="40" y="130" width="240" height="70" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="160" y="155" text-anchor="middle" font-weight="700" fill="#15803d">PERFORMANCE link</text>
+            <text x="160" y="175" text-anchor="middle" fill="#1c1c1f">merit + incentives</text>
+            <text x="160" y="190" text-anchor="middle" fill="#6b7280" font-size="10">pay-for-performance</text>
+
+            <rect x="320" y="130" width="240" height="70" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="440" y="155" text-anchor="middle" font-weight="700" fill="#15803d">COST / benefit</text>
+            <text x="440" y="175" text-anchor="middle" fill="#1c1c1f">affordable, returns measurable</text>
+            <text x="440" y="190" text-anchor="middle" fill="#6b7280" font-size="10">sustainable</text>
+          </g>
+        </svg>
+        <div class="diagram-cap">The four criteria of a competitive compensation system. Diagnose any pay system by scoring each one.</div>
+      </div>
+
+      <div class="box">
+        <h5>How this connects to the Pay Model</h5>
+        <ul>
+          <li>The Four Criteria are the operational tests of the <strong>Pay Model</strong>'s four <em>policy choices</em>: internal alignment, external competitiveness, employee contributions, management.</li>
+          <li>Above the policies sit the Pay Model's four <em>objectives</em> — Efficiency, Fairness, Ethics, Compliance.</li>
+        </ul>
+      </div>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>BAG Grocers · Zero Wage Increase</strong> — pay-for-performance dilemma; merit vs incentive trade-off.</li>
+          <li><strong>Circuit City</strong> — Caveat Emptor exercise: was the pay change actually the cause of the productivity gain?</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Milkovich, Newman &amp; Gerhart (Ch1 Pay Model)</span>
+        <span class="cite">Gerhart &amp; Rynes (sorting effect)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q2 ═══════════ -->
+<article class="q" id="q2" data-b="4">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">2</div>
+      <div class="q-meta">
+        <div class="q-block">Block 4 · Performance management</div>
+        <div class="q-text">What can we evaluate about a person in terms of contribution?</div>
+        <div class="q-original">¿Qué podemos evaluar de una persona en términos de aportación?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Three indicators capture what an employee actually contributes — <strong>traits, behaviors, and outcomes</strong>. Each tells you a different part of the story, and each has its own measurement risks.</p>
+
+      <ul>
+        <li><strong>Traits</strong> — enduring characteristics (conscientiousness, integrity, drive). Risky to evaluate: bias-prone, hard to change, weakly linked to action. Use only when the trait genuinely fits the job and can be observed.</li>
+        <li><strong>Behaviors</strong> — observable actions on the job (how they handle a customer complaint, how they run a meeting). Captured by BARS, BOS, behavioural rating scales. Strong middle ground: actionable, less biased than traits.</li>
+        <li><strong>Outcomes / results</strong> — what they actually delivered (sales closed, defects reduced, projects shipped). Captured by MBO + SMART goals. Risk: misses <em>how</em> they got there; can incentivize gaming or short-termism.</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <rect x="20" y="40" width="170" height="120" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="105" y="65" text-anchor="middle" font-weight="700" fill="#e11d48">TRAITS</text>
+            <text x="105" y="90" text-anchor="middle" fill="#1c1c1f" font-size="11">enduring</text>
+            <text x="105" y="105" text-anchor="middle" fill="#1c1c1f" font-size="11">characteristics</text>
+            <text x="105" y="135" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">bias-prone, hard</text>
+            <text x="105" y="148" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">to change</text>
+
+            <rect x="215" y="40" width="170" height="120" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="300" y="65" text-anchor="middle" font-weight="700" fill="#e11d48">BEHAVIORS</text>
+            <text x="300" y="90" text-anchor="middle" fill="#1c1c1f" font-size="11">observable</text>
+            <text x="300" y="105" text-anchor="middle" fill="#1c1c1f" font-size="11">actions on the job</text>
+            <text x="300" y="135" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">BARS · BOS</text>
+            <text x="300" y="148" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">good middle ground</text>
+
+            <rect x="410" y="40" width="170" height="120" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="495" y="65" text-anchor="middle" font-weight="700" fill="#e11d48">OUTCOMES</text>
+            <text x="495" y="90" text-anchor="middle" fill="#1c1c1f" font-size="11">results delivered</text>
+            <text x="495" y="105" text-anchor="middle" fill="#1c1c1f" font-size="11"></text>
+            <text x="495" y="135" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">MBO + SMART</text>
+            <text x="495" y="148" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">risk: misses HOW</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="box">
+        <h5>Implication for designing PM</h5>
+        <ul>
+          <li><strong>Combine all three</strong> — outcomes alone misses how; behaviors alone misses what was delivered; traits alone introduces bias and isn't actionable.</li>
+          <li>For each indicator, decide <strong>objective vs subjective</strong> measurement (Aguinis).</li>
+          <li>Quality check: every measure must be <strong>relevant, reliable, valid</strong> — free of <em>deficiency</em> (missing important content) and <em>contamination</em> (irrelevant variance).</li>
+        </ul>
+      </div>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>Vitality Health</strong> — moved from 13 absolute trait-like ratings to job-specific <em>competencies</em> (behavior) + SMART <em>objectives</em> (outcomes).</li>
+          <li><strong>Deloitte's reinvented PM</strong> — replaced ratings with future-focused behavioural statements ("I'd always want this person on my team").</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Aguinis et al. (2009) PM cycle</span>
+        <span class="cite">Ch10 Performance Management</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q3 ═══════════ -->
+<article class="q" id="q3" data-b="1">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">3</div>
+      <div class="q-meta">
+        <div class="q-block">Block 1 · Foundations</div>
+        <div class="q-text">Explain employee engagement &amp; commitment policies (políticas de vinculación).</div>
+        <div class="q-original">Explica las políticas de vinculación</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">"Vinculación" in HR Spanish covers the two ways people connect to a firm — <strong>engagement</strong> (their energy in the work itself) and <strong>commitment</strong> (their bond with the organization). Policies that build them are different from policies that just retain people.</p>
+
+      <p><strong>Engagement</strong> (Schaufeli &amp; Bakker, 2004) is a positive psychological state with three dimensions: <em>Vigor</em> (energy, resilience), <em>Dedication</em> (pride, inspiration), <em>Absorption</em> (flow). Engaged employees give discretionary effort because the work itself energizes them.</p>
+
+      <p><strong>Commitment</strong> (Meyer &amp; Allen, 1991) is a bond with the organization, with three components: <em>Affective</em> (want to stay — emotional attachment), <em>Normative</em> (ought to stay — loyalty/obligation), <em>Continuance</em> (need to stay — cost of leaving). The three produce very different outcomes.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- Engagement (left) -->
+            <rect x="20" y="20" width="260" height="200" rx="10" fill="#eef0ff" stroke="#5b6cff"/>
+            <text x="150" y="44" text-anchor="middle" font-weight="700" fill="#5b6cff" font-size="13">ENGAGEMENT (a state)</text>
+            <text x="150" y="64" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">Schaufeli &amp; Bakker (2004)</text>
+            <text x="150" y="100" text-anchor="middle" font-weight="600" fill="#1c1c1f">Vigor</text>
+            <text x="150" y="115" text-anchor="middle" font-size="10" fill="#6b7280">energy · resilience · effort</text>
+            <text x="150" y="145" text-anchor="middle" font-weight="600" fill="#1c1c1f">Dedication</text>
+            <text x="150" y="160" text-anchor="middle" font-size="10" fill="#6b7280">pride · inspiration</text>
+            <text x="150" y="190" text-anchor="middle" font-weight="600" fill="#1c1c1f">Absorption</text>
+            <text x="150" y="205" text-anchor="middle" font-size="10" fill="#6b7280">concentration · flow</text>
+
+            <!-- Commitment (right) -->
+            <rect x="320" y="20" width="260" height="200" rx="10" fill="#eef0ff" stroke="#5b6cff"/>
+            <text x="450" y="44" text-anchor="middle" font-weight="700" fill="#5b6cff" font-size="13">COMMITMENT (a bond)</text>
+            <text x="450" y="64" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">Meyer &amp; Allen (1991)</text>
+            <text x="450" y="100" text-anchor="middle" font-weight="600" fill="#1c1c1f">Affective — "want to"</text>
+            <text x="450" y="115" text-anchor="middle" font-size="10" fill="#15803d">✓ best outcomes</text>
+            <text x="450" y="145" text-anchor="middle" font-weight="600" fill="#1c1c1f">Normative — "ought to"</text>
+            <text x="450" y="160" text-anchor="middle" font-size="10" fill="#6b7280">mixed outcomes</text>
+            <text x="450" y="190" text-anchor="middle" font-weight="600" fill="#1c1c1f">Continuance — "need to"</text>
+            <text x="450" y="205" text-anchor="middle" font-size="10" fill="#e11d48">✗ trapped, disengaged</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="a-label">The HR policies that actually build them</div>
+      <ul>
+        <li><strong>Job design</strong> — meaningful, challenging roles (JCM characteristics: variety, identity, significance, autonomy, feedback) → drives Vigor + Dedication.</li>
+        <li><strong>Organizational justice + recognition + leadership + psychological safety</strong> — antecedents of <em>Perceived Organizational Support (POS)</em>, which mediates affective commitment.</li>
+        <li><strong>ToMo design</strong> (Doshi &amp; McGregor) — boost direct motives (Play, Purpose, Potential), reduce indirect pressure (Emotional, Economic, Inertia).</li>
+        <li><strong>Satisfy SDT needs</strong> (Deci &amp; Ryan) — Autonomy, Competence, Relatedness → intrinsic motivation.</li>
+        <li><strong>Voice mechanisms</strong> (Beer &amp; Eisenstat's Strategic Fitness Process) — let employees "speak truth to power" → boosts affective commitment.</li>
+        <li><strong>Avoid golden-handcuff design</strong> — non-portable benefits build <em>continuance</em> commitment, which traps people rather than engaging them.</li>
+      </ul>
+
+      <div class="box">
+        <h5>The aim</h5>
+        <p>HRM should build <strong>affective commitment</strong> + <strong>high engagement</strong>. Continuance-only employees stay but disengage (classic presenteeism); over-engaged employees risk <strong>UPB</strong> (Unethical Pro-Organizational Behavior — lying or cheating <em>for</em> the firm).</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Schaufeli &amp; Bakker (2004)</span>
+        <span class="cite">Meyer &amp; Allen (1991)</span>
+        <span class="cite">Doshi &amp; McGregor (ToMo)</span>
+        <span class="cite">Deci &amp; Ryan (SDT)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q4 ═══════════ -->
+<article class="q" id="q4" data-b="2">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">4</div>
+      <div class="q-meta">
+        <div class="q-block">Block 2 · Job design</div>
+        <div class="q-text">What are competencies?</div>
+        <div class="q-original">¿Qué son las competencias?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">A <strong>competency</strong> is a collection of <strong>knowledge, skills, abilities and other characteristics (KSAOs)</strong> that an individual needs to perform a job effectively. Competencies translate strategy into concrete people requirements — they're the bridge from "what the firm needs" to "what the person must be".</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <rect x="20" y="40" width="130" height="100" rx="8" fill="#fef3c7" stroke="#d97706"/>
+            <text x="85" y="68" text-anchor="middle" font-weight="700" fill="#d97706" font-size="20">K</text>
+            <text x="85" y="92" text-anchor="middle" font-weight="600">Knowledge</text>
+            <text x="85" y="115" text-anchor="middle" font-size="10" fill="#6b7280">what you know</text>
+
+            <rect x="170" y="40" width="130" height="100" rx="8" fill="#fef3c7" stroke="#d97706"/>
+            <text x="235" y="68" text-anchor="middle" font-weight="700" fill="#d97706" font-size="20">S</text>
+            <text x="235" y="92" text-anchor="middle" font-weight="600">Skills</text>
+            <text x="235" y="115" text-anchor="middle" font-size="10" fill="#6b7280">what you can do</text>
+
+            <rect x="320" y="40" width="130" height="100" rx="8" fill="#fef3c7" stroke="#d97706"/>
+            <text x="385" y="68" text-anchor="middle" font-weight="700" fill="#d97706" font-size="20">A</text>
+            <text x="385" y="92" text-anchor="middle" font-weight="600">Abilities</text>
+            <text x="385" y="115" text-anchor="middle" font-size="10" fill="#6b7280">cognitive · physical</text>
+
+            <rect x="470" y="40" width="110" height="100" rx="8" fill="#fef3c7" stroke="#d97706"/>
+            <text x="525" y="68" text-anchor="middle" font-weight="700" fill="#d97706" font-size="20">O</text>
+            <text x="525" y="92" text-anchor="middle" font-weight="600">Other</text>
+            <text x="525" y="111" text-anchor="middle" font-size="10" fill="#6b7280">personality,</text>
+            <text x="525" y="124" text-anchor="middle" font-size="10" fill="#6b7280">motives, values</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="a-label">Two common families</div>
+      <ul>
+        <li><strong>Technical competencies</strong> — specific to the job/function (financial modeling, code review, machine operation).</li>
+        <li><strong>Leadership / behavioural competencies</strong> — transversal (collaboration, decision-making, communication, customer focus). Usually aligned to firm-wide strategy.</li>
+      </ul>
+
+      <div class="a-label">Where competencies show up in the HR system</div>
+      <ul>
+        <li><strong>Job analysis</strong> — competencies populate the <em>Job Specification</em> (the person side).</li>
+        <li><strong>Selection</strong> — interviews and tests assess each competency (situational/behavioural questions, ability tests).</li>
+        <li><strong>Performance management</strong> — BARS scales anchor numeric ratings to competency-based behaviors.</li>
+        <li><strong>Training &amp; development</strong> — gap analysis maps current vs target competencies.</li>
+        <li><strong>Compensation</strong> — competency-based pay (skill-based structures) rewards demonstrated capability.</li>
+      </ul>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>Ricci &amp; Verona</strong> — define the KSAOs / competencies for the marketing director role; write the job specification.</li>
+          <li><strong>Vitality Health</strong> — the redesigned PM system uses <em>job-specific competencies</em> as one of the rating dimensions.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Campion et al. (2011)</span>
+        <span class="cite">Ch24 Recruitment &amp; Selection (Armstrong)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q5 ═══════════ -->
+<article class="q" id="q5" data-b="1">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">5</div>
+      <div class="q-meta">
+        <div class="q-block">Block 1 · Foundations</div>
+        <div class="q-text">What is the reference point we must have in any people-management model?</div>
+        <div class="q-original">¿Cuál es el punto de referencia que tenemos que tener en cualquier modelo de gestión de personas?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">The reference point is <strong>strategy</strong> — every HR practice exists to implement the strategic needs of the business. HRM is therefore <strong>"the design of activities affecting employee behavior to implement the strategic needs of the business"</strong>, judged on two dimensions of fit.</p>
+
+      <ul>
+        <li><strong>Vertical fit (strategic)</strong> — HR practices match the business strategy. A cost-leadership strategy (Ryanair) needs different HR than a differentiation strategy (a luxury hotel).</li>
+        <li><strong>Horizontal fit (internal)</strong> — HR practices reinforce each other. Teamwork training paired with individual ranking is a horizontal-fit failure: the practices send opposite signals.</li>
+      </ul>
+
+      <p>Both grand HRM maps make strategy central:</p>
+      <ul>
+        <li><strong>Michigan Model</strong> (Fombrun, Tichy &amp; Devanna, 1984) — the "matching" model: strategy + structure + mission tightly drive the HR cycle (Selection → Appraisal → Rewards → Development). HR follows strategy.</li>
+        <li><strong>Harvard Model</strong> (Beer et al., 1984) — strategy is one of the situational factors (alongside workforce, technology, laws, labor market) that combine with stakeholder interests to shape HR policy choices. HR also <em>shapes</em> strategy in turn.</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- Center: strategy -->
+            <circle cx="300" cy="100" r="56" fill="#1c1c1f"/>
+            <text x="300" y="98" text-anchor="middle" fill="#fff" font-weight="700" font-family="Fraunces, serif" font-size="16">Strategy</text>
+            <text x="300" y="118" text-anchor="middle" fill="#fff" font-size="10">the reference point</text>
+
+            <!-- Vertical fit -->
+            <line x1="300" y1="44" x2="300" y2="20" stroke="#5b6cff" stroke-width="2" marker-end="url(#sa1)"/>
+            <text x="300" y="14" text-anchor="middle" font-weight="700" fill="#5b6cff" font-size="11">VERTICAL FIT</text>
+            <text x="300" y="180" text-anchor="middle" font-weight="700" fill="#5b6cff" font-size="11">HR practices</text>
+            <line x1="300" y1="156" x2="300" y2="170" stroke="#5b6cff" stroke-width="2" marker-end="url(#sa1)"/>
+
+            <!-- Horizontal fit -->
+            <rect x="20" y="80" width="140" height="40" rx="6" fill="#eef0ff" stroke="#5b6cff"/>
+            <text x="90" y="105" text-anchor="middle" font-size="11">HR Flow</text>
+            <rect x="440" y="80" width="140" height="40" rx="6" fill="#eef0ff" stroke="#5b6cff"/>
+            <text x="510" y="105" text-anchor="middle" font-size="11">Compensation</text>
+            <line x1="160" y1="100" x2="244" y2="100" stroke="#5b6cff" stroke-dasharray="3,3"/>
+            <line x1="356" y1="100" x2="440" y2="100" stroke="#5b6cff" stroke-dasharray="3,3"/>
+            <text x="200" y="135" text-anchor="middle" fill="#5b6cff" font-size="10" font-style="italic">↔ horizontal fit ↔</text>
+            <text x="400" y="135" text-anchor="middle" fill="#5b6cff" font-size="10" font-style="italic">↔ horizontal fit ↔</text>
+          </g>
+          <defs>
+            <marker id="sa1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#5b6cff"/>
+            </marker>
+          </defs>
+        </svg>
+        <div class="diagram-cap">Strategy at the center. Vertical fit aligns HR with strategy; horizontal fit aligns HR practices with each other.</div>
+      </div>
+
+      <div class="box">
+        <h5>How to use this in an exam</h5>
+        <p>Whenever a case asks "design the HR system for firm X" or "what's wrong with firm X's HR system", open with <strong>strategy as the reference point</strong>, then diagnose vertical fit (HR ↔ strategy) and horizontal fit (HR ↔ HR). It's the cleanest structure for any HRM essay.</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Beer et al. (1984)</span>
+        <span class="cite">Fombrun, Tichy &amp; Devanna (1984)</span>
+        <span class="cite">Beer, Boselie &amp; Brewster (2015)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q6 — new ═══════════ -->
+<article class="q" id="q6" data-b="1">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">6</div>
+      <div class="q-meta">
+        <div class="q-block">Block 1 · Foundations</div>
+        <div class="q-text">What is the difference between the Harvard and Michigan models — and which would you defend for a multistakeholder firm?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Both 1984 models try to organize HRM as a system, but they begin from opposite premises. <strong>Michigan</strong> is "hard" — instrumental, shareholder-driven, tightly matched to strategy. <strong>Harvard</strong> is "soft" — multistakeholder, normative, judged on broader outcomes.</p>
+
+      <ul>
+        <li><strong>Michigan Model (Fombrun, Tichy &amp; Devanna, 1984)</strong> — "matching" model. Mission + strategy + organization structure drive a four-stage HR cycle (<em>Selection → Appraisal → Rewards → Development</em>), oriented toward shareholder value. HR is the implementation arm of strategy.</li>
+        <li><strong>Harvard Model (Beer et al., 1984)</strong> — "map of the HRM territory". <em>Inputs</em>: stakeholder interests (shareholders, employees, unions, community, government) + situational factors (workforce, strategy, technology, laws). <em>Outputs</em>: four policy areas → Four C's (Commitment, Competence, Congruence, Cost-effectiveness) → long-term consequences for individuals, organization and society.</li>
+      </ul>
+
+      <p>For a <strong>multistakeholder firm</strong> (cooperative, B-corp, family firm, public-sector body, regulated industry), defend Harvard. It explicitly includes broader stakeholders and judges HRM on more than financial returns — it captures the legitimacy and well-being dimensions that those firms must satisfy. <strong>Beer, Boselie &amp; Brewster (2015)</strong> extends the argument: HRM should serve a wide stakeholder set and balance economic, individual and societal well-being.</p>
+
+      <div class="box">
+        <h5>How to write the answer</h5>
+        <ul>
+          <li>Open with the hard/soft contrast and the year (both 1984 — they emerged together).</li>
+          <li>Name two outputs each model produces (Harvard: 4 Cs; Michigan: HR cycle).</li>
+          <li>Defend Harvard for the multistakeholder context — cite Beer, Boselie &amp; Brewster (2015).</li>
+          <li>Concede that Michigan is sharper for high-pressure shareholder firms or turnarounds.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Fombrun, Tichy &amp; Devanna (1984)</span>
+        <span class="cite">Beer et al. (1984)</span>
+        <span class="cite">Beer, Boselie &amp; Brewster (2015)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q7 — new ═══════════ -->
+<article class="q" id="q7" data-b="1">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">7</div>
+      <div class="q-meta">
+        <div class="q-block">Block 1 · Foundations</div>
+        <div class="q-text">Explain the AMO model and why it is multiplicative.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">AMO (Blumberg &amp; Pringle, 1982) is the performance spine of the whole course: <strong>Performance = f(Ability × Motivation × Opportunity)</strong>. The function is <strong>multiplicative</strong>, not additive — meaning any factor at zero produces zero performance, regardless of the other two.</p>
+
+      <ul>
+        <li><strong>Ability</strong> — can the person do the job? Built by HR Flow (recruit, select, train, develop). Tested in selection (cognitive ability, conscientiousness, experience — Judge et al.).</li>
+        <li><strong>Motivation</strong> — do they want to do it? Built by Performance Management (goals, feedback, recognition) and by the reward system (Total Returns).</li>
+        <li><strong>Opportunity</strong> — does the situation allow it? Built by job design (Simons' Four Spans, JCM) and work conditions (resources, autonomy, support).</li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="13">
+            <polygon points="300,30 100,200 500,200" fill="none" stroke="#5b6cff" stroke-width="2"/>
+            <text x="300" y="22" text-anchor="middle" font-weight="700" fill="#5b6cff">Ability</text>
+            <text x="80" y="218" text-anchor="middle" font-weight="700" fill="#5b6cff">Motivation</text>
+            <text x="520" y="218" text-anchor="middle" font-weight="700" fill="#5b6cff">Opportunity</text>
+            <circle cx="300" cy="140" r="56" fill="#5b6cff"/>
+            <text x="300" y="138" text-anchor="middle" fill="#fff" font-weight="700" font-family="Fraunces, serif" font-size="14">Performance</text>
+            <text x="300" y="158" text-anchor="middle" fill="#fff" font-size="11">A × M × O</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="box">
+        <h5>Why multiplicative matters</h5>
+        <ul>
+          <li>A brilliant, motivated engineer in a role with no tools and no authority will <strong>still fail</strong>. The bottleneck is Opportunity = 0.</li>
+          <li>This is the killer move in any "why is performance failing?" question — diagnose which leg is the zero.</li>
+          <li>The whole course slots into one leg: Blocks 2-3 build A; Blocks 1, 4, 5 build M; Blocks 2 and 5 build O.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Blumberg &amp; Pringle (1982)</span>
+        <span class="cite">Aguinis et al. (2009)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q8 — new ═══════════ -->
+<article class="q" id="q8" data-b="1">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">8</div>
+      <div class="q-meta">
+        <div class="q-block">Block 1 · Foundations</div>
+        <div class="q-text">What is the difference between engagement and commitment, and why does it matter?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">They sound similar but they're different constructs measured with different instruments. <strong>Engagement is a state in the work itself; commitment is a bond with the organization.</strong> Confusing them is a common essay mistake.</p>
+
+      <ul>
+        <li><strong>Engagement</strong> (Schaufeli &amp; Bakker, 2004) — three dimensions: <em>Vigor</em>, <em>Dedication</em>, <em>Absorption</em>. It's about the energy and involvement an employee brings to their work today.</li>
+        <li><strong>Commitment</strong> (Meyer &amp; Allen, 1991) — three components: <em>Affective</em> (want to stay), <em>Normative</em> (ought to stay), <em>Continuance</em> (need to stay). It's about the bond that holds them to the firm over time.</li>
+      </ul>
+
+      <p>An employee can be <strong>highly committed but disengaged</strong> (a long-tenured employee with high continuance and low affective — the classic presenteeism case). And conversely, <strong>highly engaged but uncommitted</strong> (a contractor doing great work but planning to leave when the project ends).</p>
+
+      <div class="box">
+        <h5>Why HRM design cares about both</h5>
+        <ul>
+          <li><strong>Affective commitment</strong> produces the best long-term outcomes. <strong>Continuance</strong> traps people without engaging them.</li>
+          <li><strong>Engagement</strong> drives short-term performance and discretionary effort.</li>
+          <li>The HR practices that build them overlap (justice, recognition, meaningful work, supportive leadership) but they're not identical — job design tilts toward engagement, while voice and growth opportunities tilt toward affective commitment.</li>
+          <li>Beware <strong>UPB (Unethical Pro-Organizational Behavior)</strong> — overly engaged + committed employees can lie or cheat <em>for</em> the firm.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Schaufeli &amp; Bakker (2004)</span>
+        <span class="cite">Meyer &amp; Allen (1991)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q9 — new ═══════════ -->
+<article class="q" id="q9" data-b="2">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">9</div>
+      <div class="q-meta">
+        <div class="q-block">Block 2 · Job design</div>
+        <div class="q-text">Explain Simons' Four Spans of Job Design and the "X" diagnosis.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Simons (HBR) frames job design as four sliders that have to balance. Two sliders <strong>supply</strong> resources to the role; two <strong>demand</strong> outcomes from it. A well-designed job has supply equal to demand — visually, the sliders form an "X".</p>
+
+      <ul>
+        <li><strong>Supply side</strong>
+          <ul>
+            <li><strong>Span of Control</strong> — resources the role <em>commands</em> (people, assets, budget).</li>
+            <li><strong>Span of Support</strong> — help available from others (mentorship, cross-functional partners).</li>
+          </ul>
+        </li>
+        <li><strong>Demand side</strong>
+          <ul>
+            <li><strong>Span of Accountability</strong> — range of metrics the role is <em>measured on</em>.</li>
+            <li><strong>Span of Influence</strong> — breadth of cross-unit cooperation the role <em>needs</em>.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <text x="120" y="22" text-anchor="middle" font-weight="700" fill="#d97706" font-size="11" letter-spacing="1">SUPPLY</text>
+            <text x="480" y="22" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="11" letter-spacing="1">DEMAND</text>
+            <line x1="40" y1="60" x2="560" y2="180" stroke="#d97706" stroke-width="2"/>
+            <line x1="40" y1="180" x2="560" y2="60" stroke="#e11d48" stroke-width="2"/>
+            <text x="40" y="50" text-anchor="middle" font-weight="600" fill="#d97706">Control</text>
+            <text x="40" y="200" text-anchor="middle" font-weight="600" fill="#e11d48">Accountability</text>
+            <text x="560" y="50" text-anchor="middle" font-weight="600" fill="#e11d48">Influence</text>
+            <text x="560" y="200" text-anchor="middle" font-weight="600" fill="#d97706">Support</text>
+            <rect x="260" y="105" width="80" height="30" rx="6" fill="#1c1c1f"/>
+            <text x="300" y="125" text-anchor="middle" fill="#fff" font-weight="600">Balanced</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="a-label">Diagnostic crises when the X breaks</div>
+      <ul>
+        <li><strong>Crisis of resources</strong> — Demand &gt; Supply. Many metrics + lots of cross-unit pressure, but narrow control and no support. The role-holder burns out.</li>
+        <li><strong>Crisis of control</strong> — Supply &gt; Demand. Lots of resources and autonomy, but few metrics and little cross-unit pull. The role drifts.</li>
+        <li><strong>Red-tape crisis</strong> — heavy bureaucratic supply that no one uses; demand is real but blocked.</li>
+      </ul>
+
+      <div class="box">
+        <h5>The exam move</h5>
+        <p>For any "this role is broken — what's wrong?" question, <strong>map the role to the four sliders</strong> and identify which is the misaligned one. Then propose a redesign that moves only that slider, not all four.</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Simons — HBR "Designing High-Performance Jobs"</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q10 — new ═══════════ -->
+<article class="q" id="q10" data-b="2">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">10</div>
+      <div class="q-meta">
+        <div class="q-block">Block 2 · Workforce planning</div>
+        <div class="q-text">What is workforce planning and what are the action menus when demand &gt; supply vs demand &lt; supply?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Workforce planning is the process of getting <strong>the right person, in the right job, at the right time, at the right cost</strong>. Operationally, it's a four-step exercise that balances forecasted labor demand against forecasted labor supply. The action menu depends entirely on which way the gap runs.</p>
+
+      <ol>
+        <li>Analyse the current workforce (skills, demographics, turnover).</li>
+        <li>Forecast labor <em>demand</em> from the strategy (growth, new products, automation).</li>
+        <li>Forecast labor <em>supply</em> (internal mobility, retirements, external labor market).</li>
+        <li>Close the gap.</li>
+      </ol>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11.5">
+            <!-- Demand > Supply -->
+            <rect x="20" y="30" width="260" height="150" rx="10" fill="#fef3c7" stroke="#d97706"/>
+            <text x="150" y="55" text-anchor="middle" font-weight="700" fill="#d97706" font-size="13">Demand &gt; Supply</text>
+            <text x="150" y="73" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">shortage scenario</text>
+            <text x="40" y="100" font-weight="600" fill="#1c1c1f">→ External recruitment</text>
+            <text x="40" y="120" font-weight="600" fill="#1c1c1f">→ Training / upskilling</text>
+            <text x="40" y="140" font-weight="600" fill="#1c1c1f">→ Retention bonuses</text>
+            <text x="40" y="160" font-weight="600" fill="#1c1c1f">→ Overtime / outsourcing</text>
+
+            <!-- Demand < Supply -->
+            <rect x="320" y="30" width="260" height="150" rx="10" fill="#fef3c7" stroke="#d97706"/>
+            <text x="450" y="55" text-anchor="middle" font-weight="700" fill="#d97706" font-size="13">Demand &lt; Supply</text>
+            <text x="450" y="73" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">oversupply scenario</text>
+            <text x="340" y="100" font-weight="600" fill="#1c1c1f">→ Hiring freeze</text>
+            <text x="340" y="120" font-weight="600" fill="#1c1c1f">→ Internal redeployment</text>
+            <text x="340" y="140" font-weight="600" fill="#1c1c1f">→ Voluntary exit programs</text>
+            <text x="340" y="160" font-weight="600" fill="#1c1c1f">→ Layoffs (by criterion)</text>
+          </g>
+        </svg>
+      </div>
+
+      <p>Layoff criteria (<em>when</em> needed) include: <strong>seniority</strong> (LIFO), <strong>employer status</strong> (temporary vs core), <strong>skill</strong> (keep critical capabilities), <strong>merit</strong> (performance-based), <strong>personal situation</strong> (hardship). Defending the criterion choice matters as much as the layoff itself.</p>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>PowerTech India</strong> — growth scenario (demand &gt; supply): the recruitment + retention menu.</li>
+          <li><strong>SolidTech</strong> — downsizing scenario (demand &lt; supply): the layoff-criteria choice.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Lepak &amp; Gowan</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q11 — new ═══════════ -->
+<article class="q" id="q11" data-b="2">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">11</div>
+      <div class="q-meta">
+        <div class="q-block">Block 2 · Job analysis</div>
+        <div class="q-text">Explain the difference between a Job Description and a Job Specification.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Both are outputs of <strong>Job Analysis</strong> — the systematic process of recording what a job involves. They sit side by side, but they describe two different things: the <strong>job itself</strong> vs the <strong>person who must do it</strong>.</p>
+
+      <ul>
+        <li><strong>Job Description (the job)</strong> — title, duties, responsibilities, reporting line, working conditions, tools, environment. Answers: "what does this role actually do, day to day?"</li>
+        <li><strong>Job Specification (the person)</strong> — required KSAOs: education, experience, technical skills, behavioural competencies, personal characteristics. Answers: "what must the person be?"</li>
+      </ul>
+
+      <p>Together they're the <strong>foundation of recruitment</strong>: without them, selection has no criteria, training has no target, and PM has nothing to evaluate against. They feed directly into the <strong>competency model</strong> (Q4) and the structured-interview questions (Q12).</p>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>Ricci</strong> — write the job description and specification for the marketing director role.</li>
+          <li><strong>Verona</strong> — same exercise for a different functional role; compare the KSAOs.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Ch24 Recruitment &amp; Selection (Armstrong)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q12 — new ═══════════ -->
+<article class="q" id="q12" data-b="3">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">12</div>
+      <div class="q-meta">
+        <div class="q-block">Block 3 · Selection</div>
+        <div class="q-text">What are the strongest predictors of job performance — and which selection tools should we therefore trust?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Decades of meta-analytic evidence (<strong>Judge et al., 2007</strong>) rank-order the predictors that actually work. The implications are uncomfortable for what most firms do.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <text x="20" y="25" font-weight="700" fill="#1c1c1f">Predictive strength →</text>
+            <rect x="180" y="40" width="380" height="22" fill="#0d9488"/>
+            <text x="20" y="56" font-weight="600">Cognitive ability (GMA)</text>
+            <text x="555" y="56" fill="#fff" text-anchor="end" font-weight="700" font-size="11">strongest single</text>
+            <rect x="180" y="70" width="280" height="22" fill="#0d9488" opacity=".8"/>
+            <text x="20" y="86" font-weight="600">Conscientiousness</text>
+            <rect x="180" y="100" width="220" height="22" fill="#0d9488" opacity=".6"/>
+            <text x="20" y="116" font-weight="600">Experience → self-efficacy</text>
+            <rect x="180" y="130" width="160" height="22" fill="#0d9488" opacity=".45"/>
+            <text x="20" y="146" font-weight="600">Structured interview</text>
+            <rect x="180" y="160" width="60" height="22" fill="#e11d48" opacity=".7"/>
+            <text x="20" y="176" font-weight="600">Unstructured · GPA</text>
+            <text x="555" y="176" fill="#e11d48" text-anchor="end" font-weight="700" font-size="11">weak (Cappelli)</text>
+          </g>
+        </svg>
+      </div>
+
+      <ul>
+        <li><strong>General Mental Ability (GMA)</strong> — the single strongest predictor across jobs. Test for it explicitly.</li>
+        <li><strong>Conscientiousness</strong> — the strongest Big Five trait predictor. Use a validated personality test, not gut feeling.</li>
+        <li><strong>Job experience</strong> — operates through self-efficacy. Relevant when there's actual evidence of past performance.</li>
+        <li><strong>Structured interviews</strong> — same competency-anchored questions and rubric for every candidate, scored by a panel.</li>
+      </ul>
+
+      <p><strong>Cappelli (2019)</strong> is blunt about the rest: <strong>unstructured interviews and college grades are weak predictors</strong> — yet they remain the most common selection tools. The fix isn't more interviews; it's <em>structured</em> interviews combined with ability tests.</p>
+
+      <div class="box">
+        <h5>The exam move</h5>
+        <p>If a selection-policy question gives you an unstructured "chat" interview + GPA + a CV review, attack it. Cite Judge et al. + Cappelli to defend GMA testing + conscientiousness + structured interviews instead.</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Judge et al. (2007)</span>
+        <span class="cite">Cappelli (2019)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q13 — new ═══════════ -->
+<article class="q" id="q13" data-b="3">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">13</div>
+      <div class="q-meta">
+        <div class="q-block">Block 3 · Training</div>
+        <div class="q-text">Explain Kirkpatrick's four levels of training evaluation.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Kirkpatrick's framework forces training evaluation to go beyond "did they like it?". It rises through four levels, each progressively harder to measure — and each progressively more important to the business.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <polygon points="180,180 420,180 420,200 180,200" fill="#ccfbf1" stroke="#0d9488"/>
+            <text x="300" y="194" text-anchor="middle" font-weight="700" fill="#0d9488">L1 · Reactions — did they like it?</text>
+
+            <polygon points="160,150 440,150 440,170 160,170" fill="#ccfbf1" stroke="#0d9488"/>
+            <text x="300" y="164" text-anchor="middle" font-weight="700" fill="#0d9488">L2 · Learning — did they learn it?</text>
+
+            <polygon points="140,120 460,120 460,140 140,140" fill="#0d9488"/>
+            <text x="300" y="134" text-anchor="middle" font-weight="700" fill="#fff">L3 · Behavior — do they use it?</text>
+
+            <polygon points="120,90 480,90 480,110 120,110" fill="#0d9488"/>
+            <text x="300" y="104" text-anchor="middle" font-weight="700" fill="#fff">L4 · Results — did it impact the business?</text>
+
+            <text x="300" y="40" text-anchor="middle" font-weight="700" fill="#1c1c1f" font-family="Fraunces, serif" font-size="16">Kirkpatrick — climb the pyramid</text>
+            <text x="300" y="62" text-anchor="middle" fill="#6b7280" font-size="11" font-style="italic">most firms stop at L1 · the work is at L3-L4</text>
+          </g>
+        </svg>
+      </div>
+
+      <ul>
+        <li><strong>L1 — Reactions</strong> — satisfaction surveys at end of training. Easy. Tells you nothing about whether learning happened.</li>
+        <li><strong>L2 — Learning</strong> — pre/post tests of knowledge or skills. Tells you what they absorbed.</li>
+        <li><strong>L3 — Behavior</strong> — on-the-job application weeks/months later. Tells you whether the training transferred.</li>
+        <li><strong>L4 — Results</strong> — organizational impact: ROI, productivity, quality, customer satisfaction. The hardest to attribute but the only one that justifies the investment.</li>
+      </ul>
+
+      <p>Kirkpatrick is the final phase of the <strong>Training Process Model</strong> (Needs Assessment → Design → Implementation → Evaluation). The evaluation result loops back to inform the next needs assessment.</p>
+
+      <div class="box">
+        <h5>The exam move</h5>
+        <p>For any case where a firm reports "the training was well-received", flag that they've only measured L1. Push them to L3 (did behavior change?) and L4 (did the business benefit?).</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Block 3 deck — Training Process Model</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q14 — new ═══════════ -->
+<article class="q" id="q14" data-b="3">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">14</div>
+      <div class="q-meta">
+        <div class="q-block">Block 3 · Selection</div>
+        <div class="q-text">What is the difference between Person–Organization fit and Person–Job fit, and what's the trade-off?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Two selection criteria with very different consequences for who ends up in the firm and how diverse it becomes.</p>
+
+      <ul>
+        <li><strong>Person–Organization (P-O) fit</strong> — alignment with the firm's culture, values and norms. Soft, broad. Measured with culture-style instruments (e.g. Spencer Stuart's eight styles plotted on two axes: independence-interdependence × flexibility-stability). <strong>P-O fit CAN be socialized</strong> over time through onboarding and the three domains of socialization (organization, group, task).</li>
+        <li><strong>Person–Job (P-J) fit</strong> — KSAOs match the specific job's requirements. Concrete, narrow. Measured via competency assessment, ability tests, structured interviews. <strong>P-J fit is HARDER to retrain</strong> — you can teach a skill, but at a much higher cost than hiring it.</li>
+      </ul>
+
+      <div class="box">
+        <h5>The trade-off</h5>
+        <ul>
+          <li><strong>Over-selecting for P-O fit</strong> → homogeneity, groupthink, reduced diversity and innovation. Consulting firms have famously suffered from this.</li>
+          <li><strong>Over-selecting for P-J fit</strong> → technically excellent but culturally misaligned hires who don't stay (or who poison the culture).</li>
+          <li><strong>Best practice</strong> — weight both, deliberately seek <em>complementary</em> candidates who bring something the existing team lacks.</li>
+        </ul>
+      </div>
+
+      <p>If the case mentions a homogeneous, groupthink-prone team, the diagnosis is usually <em>over-selection for P-O fit</em>. The fix is to add weight on P-J fit and recruit complementary profiles.</p>
+
+      <div class="cite-row">
+        <span class="cite">Spencer Stuart culture framework</span>
+        <span class="cite">Block 3 deck</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q15 — new ═══════════ -->
+<article class="q" id="q15" data-b="4">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">15</div>
+      <div class="q-meta">
+        <div class="q-block">Block 4 · Performance management</div>
+        <div class="q-text">Explain the difference between performance appraisal and performance management.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Aguinis, Joo &amp; Gottfredson (2011) — "Why we hate PM" — argue that <strong>most firms do appraisal and call it management</strong>. Knowing the difference is the central diagnostic of the block.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <rect x="20" y="20" width="260" height="160" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="150" y="44" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="14">APPRAISAL</text>
+            <text x="150" y="72" text-anchor="middle" font-weight="600">Once a year</text>
+            <text x="150" y="92" text-anchor="middle">HR-driven</text>
+            <text x="150" y="112" text-anchor="middle">Past-focused</text>
+            <text x="150" y="132" text-anchor="middle">Administrative</text>
+            <text x="150" y="160" text-anchor="middle" fill="#6b7280" font-style="italic" font-size="11">form-filling</text>
+
+            <rect x="320" y="20" width="260" height="160" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="450" y="44" text-anchor="middle" font-weight="700" fill="#15803d" font-size="14">MANAGEMENT</text>
+            <text x="450" y="72" text-anchor="middle" font-weight="600">Continuous</text>
+            <text x="450" y="92" text-anchor="middle">Line-manager-owned</text>
+            <text x="450" y="112" text-anchor="middle">Future-focused</text>
+            <text x="450" y="132" text-anchor="middle">Strategic / coaching</text>
+            <text x="450" y="160" text-anchor="middle" fill="#6b7280" font-style="italic" font-size="11">behavior-changing</text>
+          </g>
+        </svg>
+      </div>
+
+      <p>Both have legitimate uses (PM has both <em>administrative</em> uses like pay/promotion decisions and <em>developmental</em> uses like coaching) — but the design choices differ radically depending on where on the dial you sit.</p>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>Vitality Health (Bingham &amp; Beer)</strong> — redesign that combined relative ranking + competencies + SMART objectives + common cycle + cash + equity. Pushed toward the management end while keeping appraisal teeth.</li>
+          <li><strong>Deloitte's reinvented PM</strong> — pure shift to the management end: weekly check-ins + four future-focused statements per employee.</li>
+          <li><strong>Alex Sander</strong> — 360-degree feedback case. 360 works only where culture supports honest peer feedback (Alex Sander = it didn't).</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Aguinis et al. (2009)</span>
+        <span class="cite">Aguinis, Joo &amp; Gottfredson (2011)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q16 — new ═══════════ -->
+<article class="q" id="q16" data-b="4">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">16</div>
+      <div class="q-meta">
+        <div class="q-block">Block 4 · Rater errors</div>
+        <div class="q-text">What are the main rating errors in performance appraisal, and how can they be reduced?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Subjective ratings are vulnerable to a catalogue of systematic cognitive biases. Naming them is half the answer; proposing fixes is the other half.</p>
+
+      <ul>
+        <li><strong>Halo error</strong> — one prominent trait colors the rating on every dimension ("she's brilliant at sales, so she must be great at teamwork too").</li>
+        <li><strong>Leniency / Severity</strong> — rater is too soft or too hard across the board.</li>
+        <li><strong>Central tendency</strong> — rater clusters everyone in the middle to avoid conflict or differentiation.</li>
+        <li><strong>Contrast effect</strong> — judging an employee relative to others recently rated, rather than against the standard.</li>
+        <li><strong>Recency bias</strong> — the last few months dominate the year's rating.</li>
+        <li><strong>Similar-to-me bias</strong> — favoring employees who resemble the rater (background, style, demographic).</li>
+      </ul>
+
+      <div class="box">
+        <h5>How to reduce them</h5>
+        <ul>
+          <li><strong>Frame-of-Reference (FOR) training</strong> — calibrates raters by walking them through example performances and agreed scoring. The most direct fix.</li>
+          <li><strong>Use behavior-anchored scales</strong> — BARS or BOS reduces trait-based bias by forcing raters to score against observable behaviors.</li>
+          <li><strong>Use Mixed Standard Scales</strong> (Blanz &amp; Ghiselli, 1972) — keyed good/avg/poor statements scored via a hidden key reduces leniency drift.</li>
+          <li><strong>Multiple raters</strong> — 360 feedback dilutes any single rater's bias (but only works in a high-trust culture; otherwise it imports new political biases).</li>
+          <li><strong>Forced distribution</strong> — eliminates central tendency and leniency at the cost of team cohesion (see Q17).</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Ch10 Performance Management</span>
+        <span class="cite">Blanz &amp; Ghiselli (1972)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q17 — new ═══════════ -->
+<article class="q" id="q17" data-b="4">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">17</div>
+      <div class="q-meta">
+        <div class="q-block">Block 4 · Forced distribution</div>
+        <div class="q-text">Explain forced distribution and its trade-offs.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Forced distribution is a <strong>relative-ranking</strong> system that allocates employees into fixed-percentage categories — usually a bell curve. It's the canonical fix for rating inflation, but it imports its own costs.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <path d="M 60 150 Q 130 150 180 100 Q 230 30 300 30 Q 370 30 420 100 Q 470 150 540 150" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+            <line x1="60" y1="150" x2="540" y2="150" stroke="#1c1c1f"/>
+            <line x1="160" y1="60" x2="160" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="230" y1="40" x2="230" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="370" y1="40" x2="370" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="440" y1="60" x2="440" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <text x="110" y="170" text-anchor="middle" font-size="10" font-weight="700">U</text>
+            <text x="195" y="170" text-anchor="middle" font-size="10" font-weight="700">L</text>
+            <text x="300" y="170" text-anchor="middle" font-size="10" font-weight="700">A</text>
+            <text x="405" y="170" text-anchor="middle" font-size="10" font-weight="700">T</text>
+            <text x="490" y="170" text-anchor="middle" font-size="10" font-weight="700">NR</text>
+            <text x="300" y="20" text-anchor="middle" font-weight="700" fill="#e11d48">Vitality Health: T / A / L / U / NR</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="a-label">Pros</div>
+      <ul>
+        <li><strong>Breaks rating inflation</strong> — the most common PM disease.</li>
+        <li><strong>Forces differentiation</strong> — supports clear pay, promotion and layoff decisions.</li>
+        <li><strong>Improves accountability</strong> — raters can't avoid hard calls.</li>
+      </ul>
+
+      <div class="a-label">Cons</div>
+      <ul>
+        <li><strong>Destroys team cohesion</strong> — colleagues become rivals competing for the top buckets.</li>
+        <li><strong>Unfair in high-talent teams</strong> — a great team is forced to label someone "low" even if no one deserves it.</li>
+        <li><strong>Demotivates</strong> — being labelled bottom-bucket has lasting effects on engagement.</li>
+        <li><strong>Can be gamed</strong> — managers stuff teams with "buffer" hires to protect their stars.</li>
+      </ul>
+
+      <div class="box case">
+        <h5>Vitality Health</h5>
+        <p>Bingham &amp; Beer's case study: replaced 13 absolute rating levels with five relative categories (<strong>Top Achiever / Achiever / Low Achiever / Unacceptable / Not Rated</strong>), backed by job-specific competencies, SMART objectives, a common January cycle, and short + long-term cash + equity. A reasoned use of forced distribution — defended with competencies and objectives so it isn't a pure ranking exercise.</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Bingham &amp; Beer (Vitality Health · case 913-501)</span>
+        <span class="cite">Ch10 PM</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q18 — new ═══════════ -->
+<article class="q" id="q18" data-b="5">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">18</div>
+      <div class="q-meta">
+        <div class="q-block">Block 5 · Compensation</div>
+        <div class="q-text">Explain the difference between the incentive effect and the sorting effect of pay.</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead"><strong>Gerhart &amp; Rynes</strong> distinguish two mechanisms by which pay influences performance. Most discussions remember only the first; their key contribution was showing the second is usually the bigger lever.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <rect x="20" y="30" width="260" height="140" rx="10" fill="#fef3c7" stroke="#d97706"/>
+            <text x="150" y="55" text-anchor="middle" font-weight="700" fill="#d97706">INCENTIVE EFFECT</text>
+            <text x="150" y="90" text-anchor="middle">Pay motivates the people</text>
+            <text x="150" y="108" text-anchor="middle">you already have to work</text>
+            <text x="150" y="126" text-anchor="middle">harder.</text>
+            <text x="150" y="158" text-anchor="middle" fill="#6b7280" font-style="italic">"how hard you work"</text>
+
+            <rect x="320" y="30" width="260" height="140" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="450" y="55" text-anchor="middle" font-weight="700" fill="#15803d">SORTING EFFECT</text>
+            <text x="450" y="90" text-anchor="middle">Pay attracts and retains</text>
+            <text x="450" y="108" text-anchor="middle">different types of employees</text>
+            <text x="450" y="126" text-anchor="middle">via self-selection.</text>
+            <text x="450" y="158" text-anchor="middle" fill="#6b7280" font-style="italic">"who walks in the door"</text>
+          </g>
+        </svg>
+      </div>
+
+      <ul>
+        <li><strong>Incentive effect</strong> — current employees respond to the pay structure by changing effort. A piece-rate scheme makes them work faster.</li>
+        <li><strong>Sorting effect</strong> — the pay structure itself changes <em>who joins and stays</em>. High-variable pay attracts risk-tolerant high performers and pushes risk-averse lower performers out (self-selection).</li>
+      </ul>
+
+      <div class="box">
+        <h5>The evidence — the glass-installation study</h5>
+        <p>A glass-installation firm switched to piece-rate and saw a <strong>44% productivity rise</strong>. Most of the gain came not from existing workers trying harder, but from <em>better workers self-selecting in and weaker ones leaving</em>. The sorting effect dominated.</p>
+      </div>
+
+      <div class="box">
+        <h5>Why this matters in essays</h5>
+        <p>The killer counter to "money doesn't really motivate" is the sorting effect. Pay design doesn't just change how hard people work — it changes <strong>who you have</strong> in the first place. Use it when challenged on PFP.</p>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Gerhart &amp; Rynes</span>
+        <span class="cite">Ch1 Pay Model</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q19 — new ═══════════ -->
+<article class="q" id="q19" data-b="5">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">19</div>
+      <div class="q-meta">
+        <div class="q-block">Block 5 · Pay-for-performance</div>
+        <div class="q-text">What is the difference between a merit increase and an incentive?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Both are pay-for-performance devices, but they're structurally different. Confusing them is a common case-analysis mistake — and they produce very different long-term cost dynamics.</p>
+
+      <ul>
+        <li><strong>Merit increase</strong> — a permanent rise in base pay, awarded for past performance. <strong>Sticky</strong>: once given, it stays year after year, compounding cost. Rewards <em>past</em> behavior; the future is not contingent.</li>
+        <li><strong>Incentive</strong> — variable pay, re-earned each period, <strong>specified in advance</strong>. Tied to <em>future</em> behavior. If conditions aren't met, it isn't paid.</li>
+      </ul>
+
+      <div class="box">
+        <h5>Concrete examples</h5>
+        <ul>
+          <li><strong>Merit</strong> — "Your annual review rating was 'exceeds expectations'. Your base salary increases 4%." Permanent.</li>
+          <li><strong>Incentive</strong> — "If quarterly sales hit €1M, your bonus is 10% of salary." Variable, re-earned, conditional.</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h5>The trade-off</h5>
+        <ul>
+          <li><strong>Merit</strong> rewards loyalty and tenure, retains people, but builds permanent fixed cost into the salary base.</li>
+          <li><strong>Incentive</strong> motivates without long-term commitment, but can produce short-termism and gaming if poorly designed.</li>
+          <li><strong>Sorting consequence</strong> (Q18) — heavy-incentive firms attract risk-tolerant performers; heavy-merit firms attract security-seekers.</li>
+        </ul>
+      </div>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>BAG Grocers</strong> — wrestles directly with the merit-vs-incentive trade-off.</li>
+          <li><strong>Zero Wage Increase</strong> — what happens when neither lever moves.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Ch1 Pay Model</span>
+        <span class="cite">Session 15 deck</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════ Q20 — new ═══════════ -->
+<article class="q" id="q20" data-b="6">
+  <div class="container">
+    <div class="q-head">
+      <div class="q-num">20</div>
+      <div class="q-meta">
+        <div class="q-block">Block 6 · Unions</div>
+        <div class="q-text">Why does Pfeffer argue that unions are compatible with — and can even sustain — high-performance work systems?</div>
+      </div>
+    </div>
+
+    <div class="a">
+      <p class="a-lead">Pfeffer's contribution is a deliberate inversion of the conventional wisdom. The standard claim is <em>"management gets the union it deserves"</em> — i.e. good HR forestalls unionization. <strong>Pfeffer argues the opposite</strong>: even good HR doesn't make unions redundant, and in many cases unions are what make high-performance work systems <em>durable</em>.</p>
+
+      <div class="a-label">The argument in three moves</div>
+      <ol>
+        <li><strong>Union wage effects don't necessarily kill profits.</strong> Higher union wages attract more skilled workers, reduce turnover, and push firms to economize on labor via capital investment and training. The result is a <em>feedback loop</em>: productivity rises and offsets the wage cost. Profit hits bite mainly where the firm holds monopoly power.</li>
+        <li><strong>Unions and HPWS are positively associated.</strong> Contracts <em>lock in</em> high-commitment practices (training, self-managed teams, job security, information sharing). Without that contractual durability, HPWS erode under cost pressure — managers backslide on the investments.</li>
+        <li><strong>Bargaining is power-sharing, not zero-sum.</strong> Cooperative bargaining institutionalizes communication and joint decision-making between management and front-line staff. Adversarial bargaining shrinks the joint gains both sides could share.</li>
+      </ol>
+
+      <div class="diagram">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <rect x="20" y="80" width="120" height="60" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="80" y="105" text-anchor="middle" font-weight="700" fill="#7c3aed">Higher wages</text>
+            <text x="80" y="122" text-anchor="middle" font-size="10">(union effect)</text>
+
+            <rect x="170" y="20" width="120" height="60" rx="8" fill="#fff" stroke="#7c3aed"/>
+            <text x="230" y="45" text-anchor="middle" font-weight="700">Skill ↑</text>
+            <text x="230" y="62" text-anchor="middle" font-size="10">turnover ↓</text>
+
+            <rect x="320" y="20" width="120" height="60" rx="8" fill="#fff" stroke="#7c3aed"/>
+            <text x="380" y="45" text-anchor="middle" font-weight="700">Capital ↑</text>
+            <text x="380" y="62" text-anchor="middle" font-size="10">training ↑</text>
+
+            <rect x="460" y="80" width="120" height="60" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="520" y="105" text-anchor="middle" font-weight="700" fill="#7c3aed">Productivity ↑</text>
+            <text x="520" y="122" text-anchor="middle" font-size="10">offsets cost</text>
+
+            <path d="M 140 90 Q 160 55 170 50" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#fa1)"/>
+            <line x1="290" y1="50" x2="320" y2="50" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#fa1)"/>
+            <path d="M 440 50 Q 460 55 460 90" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#fa1)"/>
+            <path d="M 460 130 Q 300 180 140 130" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#fa1)"/>
+            <text x="300" y="178" text-anchor="middle" font-size="10" fill="#7c3aed" font-style="italic">feedback offset</text>
+          </g>
+          <defs>
+            <marker id="fa1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#7c3aed"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <p>The strategic upshot is the <strong>High Road vs Low Road</strong> choice. The Low Road (compete on labor cost) is unwinnable for advanced economies. The High Road (compete on innovation, productivity, brainpower via HPWS) is sustainable — and union backing makes it <em>durable</em> by entrenching the commitments in contract language.</p>
+
+      <div class="box case">
+        <h5>Class examples</h5>
+        <ul>
+          <li><strong>Ford · Saturn (GM)</strong> — union + HPWS coexistence and synergy.</li>
+          <li><strong>Kaiser-Permanente</strong> — labor-management partnership delivering joint gains, including lower patient mortality with unionized nurses.</li>
+          <li><strong>Tepperman's</strong> — counter-example: tentative deal rejected 23-4 by members; what happens when bargaining fails.</li>
+        </ul>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite">Pfeffer (drawing on Freeman &amp; Medoff)</span>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer>
+  <div class="container">
+    <p>20 essay-style questions with comprehensive answers, diagrams and class examples. Companion to the <a href="index.html">study companion</a>, <a href="mcq_trainer.html">MCQ trainer</a> and <a href="frameworks_cheatsheet.pdf">cheat sheet PDF</a>.</p>
+    <p style="margin-top:8px"><a href="https://github.com/lorepini/people-management">github.com/lorepini/people-management</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
