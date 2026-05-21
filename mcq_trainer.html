@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCQ Trainer</title>
+
+<!--
+================================================================================
+  MCQ TRAINER — reusable across subjects
+================================================================================
+
+  HOW TO MAKE A VERSION FOR ANOTHER SUBJECT:
+    1. Copy this file (e.g. "mcq_trainer_marketing.html")
+    2. Replace the contents of <script id="quiz-data"> below with your own JSON
+       following the same schema (subject, subjectId, blocks → questions)
+    3. That's it — open in a browser, works offline. Progress is stored per
+       subjectId in localStorage so different subjects don't collide.
+
+  QUESTION SCHEMA:
+    {
+      "subject":   "<display name>",
+      "subjectId": "<unique slug, used for localStorage>",
+      "blocks": [
+        {
+          "id":    "<unique short id>",
+          "title": "<displayed on home tile>",
+          "questions": [
+            {
+              "q": "<question text>",
+              "options": ["A text", "B text", "C text", "D text"],
+              "answer": <0-based index of the correct option>,
+              "rationale": "<one-line explanation shown after answering>"
+            },
+            ...
+          ]
+        },
+        ...
+      ]
+    }
+================================================================================
+-->
+
+<style>
+:root{
+  --bg:#f7f8fa;
+  --panel:#ffffff;
+  --ink:#1f2937;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --accent:#2563eb;
+  --accent-soft:#dbeafe;
+  --good:#16a34a;
+  --good-soft:#dcfce7;
+  --bad:#dc2626;
+  --bad-soft:#fee2e2;
+  --gold:#d97706;
+  --silver:#9ca3af;
+  --bronze:#b45309;
+  --radius:12px;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Atkinson Hyperlegible','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .25s ease;
+}
+body.flash-good{background:var(--good-soft)}
+body.flash-bad{background:var(--bad-soft)}
+
+.app{max-width:880px;margin:0 auto;padding:32px 20px 80px}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.topbar h1{font-size:1.4rem;font-weight:700;letter-spacing:-.01em}
+.topbar .sub{color:var(--muted);font-size:.85rem;margin-top:2px}
+.home-btn{
+  appearance:none;background:none;border:1px solid var(--line);
+  font:inherit;color:var(--muted);cursor:pointer;
+  padding:6px 12px;border-radius:8px;font-size:.85rem;font-weight:600;
+}
+.home-btn:hover{background:#fff;color:var(--ink)}
+
+/* ---------- screens ---------- */
+.screen{display:none;animation:fade .25s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- home: medal shelf ---------- */
+.medal-shelf{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow);
+}
+.medal-shelf h2{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
+.medal-row{display:flex;flex-wrap:wrap;gap:10px}
+.medal{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:999px;
+  background:#fef9e6;border:1px solid #fde68a;
+  font-size:.82rem;font-weight:600;color:#92400e;
+}
+.medal .ic{font-size:1.05rem;line-height:1}
+.medal.empty{background:#f3f4f6;border-color:var(--line);color:#9ca3af}
+.medal.silver{background:#f3f4f6;border-color:#d1d5db;color:#374151}
+.medal.bronze{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+
+/* ---------- home: block tiles ---------- */
+.tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.tile{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 18px 16px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;
+  box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:10px;text-align:left;
+  font:inherit;color:inherit;appearance:none;
+}
+.tile:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08);border-color:#cbd5e1}
+.tile-title{font-weight:700;font-size:1rem;color:var(--ink)}
+.tile-meta{font-size:.8rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.tile-medals{display:flex;gap:6px;flex-wrap:wrap;min-height:22px}
+.tile-medals .medal{padding:3px 8px;font-size:.72rem}
+.tile.mixed{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent}
+.tile.mixed .tile-title{color:#fff}
+.tile.mixed .tile-meta{color:rgba(255,255,255,.85)}
+
+/* ---------- quiz ---------- */
+.progress-wrap{margin-bottom:18px}
+.progress-bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);transition:width .35s ease;width:0%}
+.progress-meta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:6px}
+
+.question-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:28px 28px 24px;box-shadow:var(--shadow);
+}
+.q-text{font-size:1.08rem;font-weight:600;line-height:1.5;margin-bottom:22px;color:var(--ink)}
+.options{display:grid;gap:10px}
+.opt{
+  display:block;width:100%;text-align:left;
+  padding:14px 16px;border:1.5px solid var(--line);border-radius:10px;
+  background:#fff;font:inherit;font-size:.96rem;color:var(--ink);
+  cursor:pointer;transition:border-color .12s ease,background-color .12s ease,transform .08s ease;
+}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#f8fafc}
+.opt:active:not(:disabled){transform:scale(.998)}
+.opt:disabled{cursor:default;opacity:.95}
+.opt .letter{
+  display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;
+  background:#f3f4f6;border-radius:6px;font-weight:700;font-size:.78rem;margin-right:10px;color:var(--muted);
+}
+.opt.correct{border-color:var(--good);background:var(--good-soft)}
+.opt.correct .letter{background:var(--good);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .letter{background:var(--bad);color:#fff}
+
+.feedback{margin-top:18px;display:none}
+.feedback.show{display:block;animation:fade .2s ease}
+.feedback .verdict{font-weight:700;font-size:1.02rem;margin-bottom:6px}
+.feedback.good .verdict{color:var(--good)}
+.feedback.bad .verdict{color:var(--bad)}
+.feedback .rationale{color:#374151;font-size:.92rem}
+.feedback .next-btn{
+  margin-top:14px;appearance:none;border:none;
+  background:var(--accent);color:#fff;font:inherit;font-weight:600;
+  padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.92rem;
+}
+.feedback .next-btn:hover{background:#1d4ed8}
+
+/* ---------- break modal ---------- */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;
+  align-items:center;justify-content:center;padding:24px;z-index:50;
+  animation:fade .2s ease;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  background:#fff;border-radius:var(--radius);max-width:420px;width:100%;
+  padding:28px 24px 22px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.18);
+}
+.modal h3{font-size:1.2rem;margin-bottom:8px}
+.modal p{color:var(--muted);font-size:.92rem;margin-bottom:18px}
+.modal .row{display:flex;gap:10px;justify-content:center}
+.modal button{
+  appearance:none;border:none;font:inherit;font-weight:600;
+  padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.92rem;
+}
+.modal .primary{background:var(--accent);color:#fff}
+.modal .primary:hover{background:#1d4ed8}
+.modal .ghost{background:#f3f4f6;color:var(--ink)}
+.modal .ghost:hover{background:#e5e7eb}
+
+/* ---------- end screen ---------- */
+.end-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:32px 28px;text-align:center;box-shadow:var(--shadow);
+}
+.end-card h2{font-size:1.4rem;margin-bottom:6px}
+.end-card .sub{color:var(--muted);margin-bottom:22px}
+.end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.end-stat{background:#f8fafc;border-radius:10px;padding:14px 6px}
+.end-stat .v{font-size:1.6rem;font-weight:700;color:var(--ink)}
+.end-stat .l{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.earned-medals{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:8px 0 22px}
+.earned-medals:empty{display:none}
+.earned-medals .medal{font-size:.9rem;padding:8px 14px}
+.end-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.end-actions button{
+  appearance:none;border:none;font:inherit;font-weight:600;
+  padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.92rem;
+}
+.end-actions .primary{background:var(--accent);color:#fff}
+.end-actions .primary:hover{background:#1d4ed8}
+.end-actions .ghost{background:#f3f4f6;color:var(--ink)}
+.end-actions .ghost:hover{background:#e5e7eb}
+
+@media (max-width:500px){
+  .app{padding:18px 14px 60px}
+  .question-card{padding:20px 18px}
+  .q-text{font-size:1rem}
+  .opt{font-size:.92rem;padding:12px 14px}
+  .end-stats{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     QUESTION DATA — replace this block to make a new subject
+     ============================================================ -->
+<script id="quiz-data" type="application/json">
+{
+  "subject": "People Management",
+  "subjectId": "people_management",
+  "blocks": [
+    {
+      "id": "b1",
+      "title": "Block 1 — Foundations: SHRM, engagement & commitment",
+      "questions": [
+        {"q":"Beer et al.'s Harvard Model identifies four HR outcomes — the 'Four C's'. Which set is correct?","options":["Commitment, Competence, Congruence, Cost-effectiveness","Commitment, Competence, Cooperation, Compensation","Commitment, Capability, Congruence, Coherence","Compliance, Competence, Congruence, Cost-control"],"answer":0,"rationale":"Beer et al. (1984): Commitment, Competence, Congruence, Cost-effectiveness."},
+        {"q":"Which best distinguishes the Michigan Model from the Harvard Model of HRM?","options":["Michigan is multi-stakeholder; Harvard is shareholder-driven","Michigan emphasizes a tight match with strategy and shareholder value; Harvard is multi-stakeholder and developmental","Michigan introduces the AMO formula; Harvard introduces SHRM","Michigan focuses on employee voice; Harvard focuses on cost control"],"answer":1,"rationale":"Michigan = 'hard' matching model, shareholder-oriented; Harvard = 'soft', multistakeholder, developmental."},
+        {"q":"According to the AMO model, how do Ability, Motivation and Opportunity combine to produce performance?","options":["Additively (A + M + O)","Multiplicatively — any zero factor gives zero performance","Ability and Motivation only, with Opportunity as mediator","As the maximum of the three"],"answer":1,"rationale":"AMO is multiplicative (Blumberg & Pringle, 1982). If any factor is zero, performance is zero."},
+        {"q":"In Doshi & McGregor's Total Motivation (ToMo), which three motives are 'direct' (performance-enhancing)?","options":["Play, Purpose, Potential","Play, Pay, Pride","Purpose, Pressure, Potential","Play, Potential, Inertia"],"answer":0,"rationale":"Direct = Play, Purpose, Potential. Indirect (performance-reducing) = Emotional pressure, Economic pressure, Inertia."},
+        {"q":"Schaufeli & Bakker (2004) define work engagement with three dimensions. Which set?","options":["Vigor, Dedication, Absorption","Vigor, Dedication, Commitment","Energy, Engagement, Effectiveness","Vigor, Absorption, Affective Commitment"],"answer":0,"rationale":"VDA — Vigor (energy), Dedication (pride/inspiration), Absorption (flow)."},
+        {"q":"In Meyer & Allen's three-component model, which form of commitment produces the BEST outcomes for both employee and firm?","options":["Continuance commitment ('need to stay')","Affective commitment ('want to stay')","Normative commitment ('ought to stay')","All three produce equivalent outcomes"],"answer":1,"rationale":"Affective (emotional attachment) → best performance and well-being. Continuance traps people; normative is mixed."},
+        {"q":"Self-Determination Theory (Deci & Ryan, 1985) identifies three basic psychological needs. Which set?","options":["Autonomy, Competence, Relatedness","Autonomy, Achievement, Affiliation","Mastery, Purpose, Autonomy","Competence, Connection, Compensation"],"answer":0,"rationale":"SDT = Autonomy, Competence, Relatedness. (Pink's 'Drive' popularized Mastery/Autonomy/Purpose — adjacent but not SDT.)"},
+        {"q":"What is Beer, Boselie & Brewster's (2015) central thesis?","options":["HRM should serve shareholders primarily","HRM should balance employees and shareholders only","HRM should serve a wide set of stakeholders — shareholders, employees, unions, community AND government","HRM should serve top management as shareholder agents"],"answer":2,"rationale":"The multistakeholder argument — opposes the shareholder-only orientation of RBV/strategic HRM."},
+        {"q":"Which is NOT a typical antecedent of Perceived Organizational Support (POS)?","options":["Organizational justice","Recognition and rewards","Leadership and psychological safety","Wage suppression and economic pressure"],"answer":3,"rationale":"POS antecedents are positive drivers; wage suppression is its opposite."},
+        {"q":"Unethical Pro-Organizational Behavior (UPB) refers to:","options":["Unethical acts for personal gain at the firm's expense","Unethical acts performed to benefit one's organization (e.g. concealing defects)","Organizations behaving unethically toward employees","Whistleblowing on the organization's ethics violations"],"answer":1,"rationale":"UPB = the dark side of high commitment — engaged employees may lie/cheat FOR the firm."}
+      ]
+    },
+    {
+      "id": "b2",
+      "title": "Block 2 — Job design, analysis, workforce planning & selection",
+      "questions": [
+        {"q":"In Simons' Four Spans of Job Design, which two spans constitute the SUPPLY of resources?","options":["Span of Control + Span of Support","Span of Control + Span of Accountability","Span of Influence + Span of Support","Span of Accountability + Span of Influence"],"answer":0,"rationale":"Control + Support = supply (resources/help). Accountability + Influence = demand (metrics/cross-unit cooperation)."},
+        {"q":"Which set is Hackman & Oldham's five core job characteristics?","options":["Skill variety, task identity, task significance, autonomy, feedback","Skill variety, task identity, autonomy, ability, motivation","Span of control, autonomy, feedback, support, accountability","Variety, identity, significance, cooperation, recognition"],"answer":0,"rationale":"JCM = Skill Variety, Task Identity, Task Significance, Autonomy, Feedback."},
+        {"q":"How is the Motivating Potential Score (MPS) calculated?","options":["(SV + TI + TS + A + F) / 5","((SV + TI + TS) / 3) × Autonomy × Feedback","SV × TI × TS × A × F","(SV + TI + TS) × (A + F)"],"answer":1,"rationale":"Average the 'meaningfulness' trio, then multiply by autonomy and feedback. Weak autonomy OR feedback alone kills MPS."},
+        {"q":"What does the 'O' in KSAOs stand for?","options":["Outcomes","Objectives","Other characteristics (personality, motives, values)","Opportunity"],"answer":2,"rationale":"KSAOs = Knowledge, Skills, Abilities, Other characteristics (e.g. personality)."},
+        {"q":"When Demand > Supply in workforce planning, which is NOT a typical response?","options":["External recruitment","Training to upskill internal staff","Voluntary exit programs","Overtime and retention bonuses"],"answer":2,"rationale":"Voluntary exits address Demand<Supply (oversupply). The others close a shortage."},
+        {"q":"In a RACI matrix, what is the cardinal rule about 'Accountable'?","options":["Multiple people can share Accountable","Only one person can be Accountable per task","Accountable and Responsible must always be different people","Accountable is optional if Responsible is assigned"],"answer":1,"rationale":"Single A per task — otherwise no one truly owns the decision."},
+        {"q":"In the STAR method, what does the 'T' stand for?","options":["Tactic","Team","Task","Tool"],"answer":2,"rationale":"Situation, Task, Action, Result. Task = the challenge/objective."},
+        {"q":"Per Latham & Sue-Chan (1996), SITUATIONAL interview questions are especially suited to:","options":["Senior leaders with deep experience","Inexperienced candidates with no relevant past behavior","Internal promotions","Mass hiring of identical roles"],"answer":1,"rationale":"Situational = hypothetical, taps intentions/cognitive ability — ideal when behavioral history isn't available."},
+        {"q":"An interviewer favors a candidate who reminds them of themselves. This is the:","options":["Contrast effect","Halo effect","Similar-to-me effect","Recency bias"],"answer":2,"rationale":"Similar-to-me. Contrast = judging vs others just interviewed; halo = one trait colors all."},
+        {"q":"'Last in, first out' is which type of layoff selection criterion?","options":["Skill-based","Merit-based","Seniority-based","Personal-situation-based"],"answer":2,"rationale":"LIFO = seniority — the longest-tenured are protected."}
+      ]
+    },
+    {
+      "id": "b3",
+      "title": "Block 3 — Recruitment, selection, socialization, training",
+      "questions": [
+        {"q":"The training process model has four phases. Which is the correct order?","options":["Design → Needs Assessment → Implementation → Evaluation","Needs Assessment → Design → Implementation → Evaluation","Implementation → Needs Assessment → Design → Evaluation","Needs Assessment → Implementation → Design → Evaluation"],"answer":1,"rationale":"Needs (what's the gap?) → Design (objectives/content) → Implement → Evaluate, then loop back."},
+        {"q":"When using the STAR method, what's the single most important thing to do in the Action step?","options":["Describe what the team did using 'we' statements","Describe YOUR specific actions, not the team's ('I' not 'we')","Skip the action and emphasize the result","List as many actions as possible to show effort"],"answer":1,"rationale":"STAR's value is revealing the candidate's individual behavior — 'we' answers are the #1 failure mode."},
+        {"q":"Which best describes Person–Organization fit vs Person–Job fit?","options":["P-O = skills/job match; P-J = culture/values match","P-O = culture/values match (can be socialized); P-J = skills/job match (harder to retrain)","P-O and P-J refer to the same construct","P-O is irrelevant for executive hires"],"answer":1,"rationale":"P-O = culture fit (socializable); P-J = KSAO fit (harder to retrain). Over-selecting for P-O risks homogeneity."},
+        {"q":"Per Judge et al. (2007), which Big Five trait is the strongest *personality* predictor of job performance?","options":["Extraversion","Openness","Conscientiousness","Agreeableness"],"answer":2,"rationale":"Conscientiousness is the strongest personality predictor. General mental ability outpredicts ALL Big Five traits."},
+        {"q":"The Spencer Stuart culture framework maps culture on two axes. Which?","options":["Speed × Quality","Independence–Interdependence × Flexibility–Stability","Top-down × Bottom-up","Innovation × Compliance"],"answer":1,"rationale":"The 8 styles (Learning, Purpose, Caring, Order, Safety, Authority, Results, Enjoyment) plot on these two axes."},
+        {"q":"Kirkpatrick's training evaluation Level 4 measures:","options":["Reactions (did they like it?)","Learning (pre/post tests)","Behavior change on the job","Results — organizational impact / ROI"],"answer":3,"rationale":"Reactions → Learning → Behavior → Results. Level 4 = business outcomes."},
+        {"q":"Onboarding works in three domains. Which set?","options":["Organization, Group/Department, Task","Strategy, Structure, Systems","Vision, Mission, Values","Selection, Socialization, Separation"],"answer":0,"rationale":"Org (values/policies), Group (supervisor/peers), Task (responsibilities/resources)."},
+        {"q":"A new-hire cohort goes through 4 weeks of group training together at start. This is:","options":["Sequential socialization","Individual socialization","Collective socialization","Random socialization"],"answer":2,"rationale":"Collective = group cohort training. Individual = 1-on-1; Sequential = predetermined timing/stages."},
+        {"q":"A selection test gives consistent scores when administered repeatedly but doesn't actually predict performance. The test is:","options":["Valid but not reliable","Reliable but not valid","Both valid and reliable","Neither valid nor reliable"],"answer":1,"rationale":"Consistent = reliable; doesn't predict outcome = not valid. A reliable test can still measure the wrong thing."},
+        {"q":"Cappelli (2019) argues which selection tools are particularly WEAK predictors of performance?","options":["Cognitive ability tests","Structured interviews","Unstructured interviews and college grades","Work samples"],"answer":2,"rationale":"Chat-style interviews and GPA don't predict; structured interviews + cognitive tests do."}
+      ]
+    },
+    {
+      "id": "b4",
+      "title": "Block 4 — Performance management & appraisal",
+      "questions": [
+        {"q":"Aguinis et al.'s Performance Management model is built on which three pillars?","options":["Plan, Do, Review","Identify, Measure, Develop","Goal-Setting, Appraisal, Compensation","Recruit, Train, Retain"],"answer":1,"rationale":"PM = continuous process of Identifying (what), Measuring (how), and Developing performance — aligned to strategy."},
+        {"q":"Which best contrasts Performance APPRAISAL with Performance MANAGEMENT?","options":["Appraisal is forward-looking and strategic; management is backward-looking and administrative","Appraisal is once a year, HR-driven, past-focused; management is continuous, line-manager-owned, future-focused","They are different names for the same process","Appraisal applies only to executives; management to junior staff"],"answer":1,"rationale":"Aguinis, Joo & Gottfredson (2011) — 'Why we hate PM'. Most systems do appraisal and call it management."},
+        {"q":"The biggest risk of a forced-distribution (bell curve) rating system is:","options":["Inflated ratings across the board","Lack of differentiation among employees","Destruction of team cohesion; unfairness in high-talent teams","Low rater motivation to participate"],"answer":2,"rationale":"Forced distribution fixes inflation but at the cost of cohesion — a great team is forced to label someone 'low'."},
+        {"q":"The Vitality Health revised PM system uses which forced-distribution categories?","options":["Excellent / Good / Average / Poor / Fail","A / B / C / D / F","Top Achiever / Achiever / Low Achiever / Unacceptable / Not Rated","5 / 4 / 3 / 2 / 1"],"answer":2,"rationale":"T / A / L / U / NR — the case redesign categories (Bingham & Beer)."},
+        {"q":"Aguinis warns that 360-degree feedback can backfire when:","options":["Only the supervisor provides feedback","It is used for development only","The culture is low-trust and feedback is tied to administrative decisions","The organization is unionized"],"answer":2,"rationale":"360 needs psychological safety; in adversarial cultures it punishes honest feedback (cf. Alex Sander)."},
+        {"q":"A Behaviorally Anchored Rating Scale (BARS) anchors numeric rating levels with:","options":["Statistical norms from peer groups","Concrete behavioral descriptions drawn from critical incidents","Trait adjectives like 'excellent'","Forced-distribution percentages"],"answer":1,"rationale":"BARS anchors each scale point with an observable behavior, reducing rater drift."},
+        {"q":"Which best describes the relationship between MBO and SMART?","options":["They are competing alternatives","MBO is an outcomes-based PM approach; SMART is the operational template for the objectives it sets","SMART replaced MBO in the 2000s","MBO measures behavior; SMART measures traits"],"answer":1,"rationale":"MBO (Drucker) = jointly set measurable goals; SMART operationalizes the goal-quality criteria."},
+        {"q":"Rating each employee against fixed standards, with no comparison to others, is:","options":["Relative judgment","Forced distribution","Absolute judgment","Paired comparison"],"answer":2,"rationale":"Absolute = vs fixed criteria; Relative = ranks/forces vs other employees."},
+        {"q":"A rater gives an employee high scores on all dimensions because they admire one prominent strength. This is:","options":["Leniency error","Central tendency","Halo error","Recency bias"],"answer":2,"rationale":"Halo = one trait 'colors' all ratings."},
+        {"q":"A KPI captures aspects of performance that are unrelated to the job, inflating scores. The measure is:","options":["Deficient","Contaminated","Reliable","Relevant"],"answer":1,"rationale":"Contaminated = captures irrelevant variance. Deficient = misses important aspects (the opposite trap)."}
+      ]
+    },
+    {
+      "id": "b5",
+      "title": "Block 5 — Compensation, incentives & employment relations",
+      "questions": [
+        {"q":"The Pay Model (Milkovich, Newman & Gerhart) lists four objectives. Which set?","options":["Efficiency, Fairness, Ethics, Compliance","Internal alignment, External competitiveness, Contributions, Management","Recruit, Retain, Reward, Recognize","Wages, Benefits, Bonuses, Equity"],"answer":0,"rationale":"Objectives = EFEC. Option B is the four POLICY CHOICES — easy distractor swap."},
+        {"q":"In the Total Returns model, 'Relational/Psychological Returns' include:","options":["Base pay and bonuses","Health insurance and retirement contributions","Recognition, employment security, learning/leadership opportunities","Stock options and equity grants"],"answer":2,"rationale":"Relational returns are non-financial: recognition, security, meaningful work, growth opportunities."},
+        {"q":"Which is NOT one of the Four Criteria of a competitive compensation system?","options":["Internal equity (job-worth fairness)","External equity (industry par)","Performance link","Geographic uniformity"],"answer":3,"rationale":"The four are: internal equity, external equity, performance link, cost/benefit. Geographic uniformity isn't one."},
+        {"q":"Which best distinguishes a merit increase from an incentive?","options":["Merit increases are temporary; incentives are permanent","Merit increases add to base pay (permanent); incentives are re-earned each period and variable","Merit increases reward future performance; incentives reward past performance","They are different names for the same pay device"],"answer":1,"rationale":"Merit = sticky, cumulative cost. Incentives = variable, re-earned, specified in advance — the BAG / Zero Wage design lesson."},
+        {"q":"Gerhart & Rynes' 'sorting effect' of pay refers to:","options":["How pay motivates current employees to work harder","How different pay structures attract/retain different *types* of employees via self-selection","How pay should be sorted into base + variable components","How pay grades are sorted by job family"],"answer":1,"rationale":"Sorting effect ≠ incentive effect. The 44% glass-installation productivity gain came mostly from sorting."},
+        {"q":"Profit-sharing and ESOPs are examples of which type of incentive plan?","options":["Individual","Group/Team","Organization-wide","Recognition"],"answer":2,"rationale":"Profit-sharing and ESOPs reward at the firm level — everyone shares."},
+        {"q":"Broadbanding refers to which pay structure type?","options":["Narrow-graded — many grades, short progressions","Broad-graded — few grades, long within-grade progression","Job-family — pay by occupation category","Skill-based — pay for accumulated skills"],"answer":1,"rationale":"Broadbanding = few wide grades; fits flatter organizations."},
+        {"q":"Per Hall & Soskice (2001), which is a Coordinated Market Economy (CME)?","options":["United States","United Kingdom","Germany","Australia"],"answer":2,"rationale":"CMEs (Germany, Nordics) have higher unionization, more legislation, institutional collaboration. The others are LMEs."},
+        {"q":"Telecommuting / flexible hours are classified as:","options":["Direct compensation","Indirect monetary benefit","Indirect non-monetary benefit","Incentive pay"],"answer":2,"rationale":"Indirect non-monetary = telecommuting, flexi-hours, childcare. Indirect monetary = health insurance, pension."},
+        {"q":"The 'Caveat Emptor / Informed Consumer of Research' framework asks three questions. Which is one?","options":["Is it cheap?","Are there alternative explanations?","Did employees vote for it?","Is it Six-Sigma certified?"],"answer":1,"rationale":"Useful? · Correlation ≠ causation? · Alternative explanations? Applied in the Circuit City exercise."}
+      ]
+    },
+    {
+      "id": "b6",
+      "title": "Block 6 — Unions, collective bargaining & labor relations",
+      "questions": [
+        {"q":"What is Pfeffer's argument about union wage effects?","options":["Higher union wages always reduce profitability","Union wages don't necessarily lower profits — feedback effects (skill, lower turnover, capital investment) raise productivity","Unions only raise wages where they hold monopoly power","Unions have no measurable effect on wages"],"answer":1,"rationale":"Pfeffer (drawing on Freeman & Medoff): the wage-profit link is mediated by productivity gains; the negative effect bites mainly where firms hold market power."},
+        {"q":"Pfeffer argues that unionization and high-commitment work practices are:","options":["Mutually exclusive","Positively associated; unions can make HPWS more durable via contracts","Unrelated","Negatively correlated in advanced economies"],"answer":1,"rationale":"Contracts lock in training, teams, job security — preventing backsliding. Examples: Ford, Saturn, Kaiser-Permanente."},
+        {"q":"In Pfeffer's framing, the 'High Road' competitive strategy means competing on:","options":["Lowest labor costs","Outsourcing to developing economies","Innovation, productivity and brainpower via high-performance work practices","Government subsidies and tariff protection"],"answer":2,"rationale":"Low road (cost) is unwinnable for advanced economies; the high road is sustainable AND union-compatible."},
+        {"q":"The 'management gets the union it deserves' thesis claims:","options":["Unions inevitably arrive in poorly managed firms; good HR makes unions unnecessary","Management chooses which union represents its workers","Unions reward good management with cooperation","Unionization is independent of management quality"],"answer":0,"rationale":"This is the conventional-wisdom thesis Pfeffer SETS UP TO DISMANTLE — he argues even good HR doesn't make unions redundant."},
+        {"q":"Pfeffer frames collective bargaining most favorably as:","options":["An adversarial zero-sum negotiation over wages","A mechanism for institutionalizing power-sharing, communication and joint decision-making","A legalistic process driven by external mediators","A symbolic ritual with little real impact"],"answer":1,"rationale":"Outcomes are best in partnership mode (Kaiser-Permanente); adversarial bargaining shrinks the gains."},
+        {"q":"Unions tend to compress the wage distribution. The mechanism is:","options":["Government legislation","An egalitarian ethos required for collective action","Mandatory pay caps","Tax-driven equalization"],"answer":1,"rationale":"Solidarity needed for collective action drives the compressed structure; wide pay dispersion harms performance."},
+        {"q":"In collective bargaining, a tentative agreement only takes effect after:","options":["The union's business agent signs it","The CEO approves it","A majority ratification vote by union members","Both parties sign a memorandum of understanding"],"answer":2,"rationale":"Ratification = majority member vote. If rejected (Tepperman's: 23–4), the deal is dead — back to bargaining (or strike)."},
+        {"q":"Pfeffer cites Kaiser-Permanente as an example of:","options":["A failed unionization drive","A labor-management partnership delivering joint gains (lower mortality with unionized nurses)","Aggressive union-busting","The end of collective bargaining in healthcare"],"answer":1,"rationale":"K-P is Pfeffer's flagship case for cooperative bargaining outperforming adversarial models."}
+      ]
+    }
+  ]
+}
+</script>
+
+<div class="app">
+
+  <!-- ============ HOME SCREEN ============ -->
+  <section id="home" class="screen active">
+    <div class="topbar">
+      <div>
+        <h1 id="subject-title">MCQ Trainer</h1>
+        <div class="sub" id="subject-sub"></div>
+      </div>
+    </div>
+
+    <div class="medal-shelf">
+      <h2>Your medals</h2>
+      <div class="medal-row" id="medal-shelf"></div>
+    </div>
+
+    <div class="tile-grid" id="block-grid"></div>
+  </section>
+
+  <!-- ============ QUIZ SCREEN ============ -->
+  <section id="quiz" class="screen">
+    <div class="topbar">
+      <div>
+        <h1 id="quiz-title">Quiz</h1>
+        <div class="sub" id="quiz-sub"></div>
+      </div>
+      <button class="home-btn" id="quit-btn">Quit</button>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-meta">
+        <span id="progress-text">0 / 0 mastered</span>
+        <span id="streak-text">Streak: 0</span>
+      </div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-text" id="q-text">…</div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback">
+        <div class="verdict" id="verdict"></div>
+        <div class="rationale" id="rationale"></div>
+        <button class="next-btn" id="next-btn">Next →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ END SCREEN ============ -->
+  <section id="end" class="screen">
+    <div class="end-card">
+      <h2 id="end-title">All mastered! 🎉</h2>
+      <div class="sub" id="end-sub">Session summary</div>
+      <div class="end-stats">
+        <div class="end-stat"><div class="v" id="stat-answered">0</div><div class="l">Answered</div></div>
+        <div class="end-stat"><div class="v" id="stat-correct">0</div><div class="l">Correct first try</div></div>
+        <div class="end-stat"><div class="v" id="stat-accuracy">0%</div><div class="l">Accuracy</div></div>
+      </div>
+      <div class="earned-medals" id="earned-medals"></div>
+      <div class="end-actions">
+        <button class="primary" id="end-again">Play again</button>
+        <button class="ghost" id="end-home">Home</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ BREAK MODAL ============ -->
+<div class="modal-backdrop" id="break-modal">
+  <div class="modal">
+    <h3>Take a breath 🌿</h3>
+    <p id="break-text">You've answered 7 questions. Keep going?</p>
+    <div class="row">
+      <button class="primary" id="break-continue">Continue</button>
+      <button class="ghost" id="break-stop">Stop for now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+//================================================================
+// MCQ Trainer — engine
+//================================================================
+const DATA = JSON.parse(document.getElementById('quiz-data').textContent);
+const STORAGE_KEY = 'mcq_' + DATA.subjectId + '_progress';
+
+// ---- Medals catalogue ----
+const MEDAL_DEFS = {
+  finished:  { label: 'Block finished', ic: '🥉', cls: 'bronze' },
+  threeX:    { label: '3× completed',   ic: '🥈', cls: 'silver' },
+  perfect:   { label: 'Perfect run',    ic: '🥇', cls: '' },
+};
+
+// ---- Progress state (persisted) ----
+function loadProgress(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e){ return {}; }
+}
+function saveProgress(p){ localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+function blockState(p, id){
+  if (!p[id]) p[id] = { completions: 0, perfectRuns: 0, medals: [] };
+  return p[id];
+}
+
+// ---- Render: home ----
+function renderHome(){
+  document.getElementById('subject-title').textContent = DATA.subject + ' — MCQ Trainer';
+  const total = DATA.blocks.reduce((n,b)=>n+b.questions.length, 0);
+  document.getElementById('subject-sub').textContent = `${total} questions across ${DATA.blocks.length} blocks`;
+
+  const prog = loadProgress();
+
+  // medal shelf — aggregate across blocks
+  const shelf = document.getElementById('medal-shelf');
+  shelf.innerHTML = '';
+  const totalMedals = { finished:0, threeX:0, perfect:0 };
+  DATA.blocks.forEach(b => {
+    const s = blockState(prog, b.id);
+    s.medals.forEach(m => totalMedals[m] !== undefined && totalMedals[m]++);
+  });
+  Object.entries(MEDAL_DEFS).forEach(([k, def]) => {
+    const count = totalMedals[k];
+    const el = document.createElement('span');
+    el.className = 'medal ' + def.cls + (count === 0 ? ' empty' : '');
+    el.innerHTML = `<span class="ic">${def.ic}</span>${def.label} × ${count}`;
+    shelf.appendChild(el);
+  });
+
+  // tiles
+  const grid = document.getElementById('block-grid');
+  grid.innerHTML = '';
+  DATA.blocks.forEach(b => {
+    const s = blockState(prog, b.id);
+    const btn = document.createElement('button');
+    btn.className = 'tile';
+    btn.innerHTML = `
+      <div class="tile-title">${escapeHtml(b.title)}</div>
+      <div class="tile-meta">
+        <span>${b.questions.length} questions</span>
+        <span>Completed ${s.completions}×</span>
+      </div>
+      <div class="tile-medals">${renderMedals(s.medals)}</div>
+    `;
+    btn.onclick = () => startQuiz([b], b.title);
+    grid.appendChild(btn);
+  });
+
+  // mixed tile
+  const mixed = document.createElement('button');
+  mixed.className = 'tile mixed';
+  mixed.innerHTML = `
+    <div class="tile-title">🎲 Mix all blocks</div>
+    <div class="tile-meta">
+      <span>${DATA.blocks.reduce((n,b)=>n+b.questions.length,0)} questions, shuffled</span>
+      <span>Exam-style</span>
+    </div>
+    <div class="tile-medals"></div>
+  `;
+  mixed.onclick = () => startQuiz(DATA.blocks, 'Mixed — all blocks');
+  grid.appendChild(mixed);
+}
+
+function renderMedals(list){
+  if (!list || list.length === 0) return '';
+  // dedupe display, but show counts
+  const counts = {};
+  list.forEach(m => counts[m] = (counts[m] || 0) + 1);
+  return Object.entries(counts).map(([k,n]) => {
+    const def = MEDAL_DEFS[k];
+    if (!def) return '';
+    return `<span class="medal ${def.cls}"><span class="ic">${def.ic}</span>${def.label}${n>1 ? ' ×'+n : ''}</span>`;
+  }).join('');
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ---- Quiz state ----
+let quizState = null;
+
+function startQuiz(blocks, title){
+  // Build queue. For each question keep meta about which block it came from.
+  const queue = [];
+  blocks.forEach(b => {
+    b.questions.forEach((q, i) => {
+      queue.push({
+        blockId: b.id,
+        blockTitle: b.title,
+        qid: b.id + '_' + i,
+        q: q.q,
+        options: q.options,
+        answer: q.answer,
+        rationale: q.rationale,
+        mastered: false,
+      });
+    });
+  });
+  shuffle(queue);
+
+  quizState = {
+    title,
+    blocks,         // blocks involved (for medal awarding)
+    queue,
+    total: queue.length,
+    sessionAnswered: 0,     // total questions answered this session
+    sessionCorrect: 0,      // correct-on-first-try this session
+    sessionWrongAny: false, // was there any wrong answer this session?
+    streak: 0,              // current correct streak
+    answeredSinceBreak: 0,  // counts toward the 7-question break
+    seenFirstTry: {},       // qid -> bool (whether this question was answered correctly on first try)
+  };
+
+  showScreen('quiz');
+  document.getElementById('quiz-title').textContent = title;
+  document.getElementById('quiz-sub').textContent = `${queue.length} questions to master`;
+  nextQuestion();
+}
+
+function shuffle(a){
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+}
+
+function nextQuestion(){
+  if (quizState.queue.length === 0){
+    finishQuiz(true);
+    return;
+  }
+  const q = quizState.queue[0];
+  renderQuestion(q);
+  updateProgressBar();
+}
+
+function renderQuestion(q){
+  document.getElementById('q-text').textContent = q.q;
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  const letters = ['A','B','C','D','E','F'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span>${escapeHtml(opt)}`;
+    btn.onclick = () => onAnswer(i);
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('feedback').classList.remove('show', 'good', 'bad');
+}
+
+function onAnswer(picked){
+  const q = quizState.queue[0];
+  const correct = picked === q.answer;
+  const opts = document.querySelectorAll('#options .opt');
+  opts.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.answer) b.classList.add('correct');
+    if (i === picked && !correct) b.classList.add('wrong');
+  });
+
+  quizState.sessionAnswered++;
+  quizState.answeredSinceBreak++;
+
+  // track first-try correctness for perfect-run medal
+  const firstTry = !(q.qid in quizState.seenFirstTry);
+  if (firstTry) quizState.seenFirstTry[q.qid] = correct;
+
+  if (correct){
+    quizState.streak++;
+    if (firstTry) quizState.sessionCorrect++;
+    flashScreen('good');
+    showFeedback(true, q.rationale);
+    // mastered (1-correct rule) — remove from queue
+    quizState.queue.shift();
+    // auto-advance on correct after a short pause
+    setTimeout(() => {
+      if (!quizState) return;
+      handlePostAnswer();
+    }, 1100);
+  } else {
+    quizState.streak = 0;
+    quizState.sessionWrongAny = true;
+    flashScreen('bad');
+    showFeedback(false, q.rationale);
+    // Wrong → re-queue 2-4 slots later
+    const removed = quizState.queue.shift();
+    const offset = Math.min(quizState.queue.length, 2 + Math.floor(Math.random() * 3));
+    quizState.queue.splice(offset, 0, removed);
+    // Wait for user to click Next on wrong answers
+    document.getElementById('next-btn').onclick = handlePostAnswer;
+  }
+  updateProgressBar();
+}
+
+function flashScreen(kind){
+  document.body.classList.remove('flash-good', 'flash-bad');
+  // force reflow so animation restarts
+  void document.body.offsetWidth;
+  document.body.classList.add(kind === 'good' ? 'flash-good' : 'flash-bad');
+  setTimeout(() => document.body.classList.remove('flash-good', 'flash-bad'), 600);
+}
+
+function showFeedback(good, rationale){
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show', good ? 'good' : 'bad');
+  document.getElementById('verdict').textContent = good ? '✓ Correct!' : '✗ Not quite';
+  document.getElementById('rationale').textContent = rationale || '';
+  document.getElementById('next-btn').style.display = good ? 'none' : 'inline-block';
+}
+
+function handlePostAnswer(){
+  // Check break (every 7 questions)
+  if (quizState.answeredSinceBreak >= 7 && quizState.queue.length > 0){
+    quizState.answeredSinceBreak = 0;
+    showBreakModal();
+    return;
+  }
+  nextQuestion();
+}
+
+function showBreakModal(){
+  const modal = document.getElementById('break-modal');
+  document.getElementById('break-text').textContent =
+    `You've answered ${quizState.sessionAnswered} questions, ${quizState.queue.length} left in the pool. Keep going?`;
+  modal.classList.add('show');
+}
+
+document.getElementById('break-continue').onclick = () => {
+  document.getElementById('break-modal').classList.remove('show');
+  nextQuestion();
+};
+document.getElementById('break-stop').onclick = () => {
+  document.getElementById('break-modal').classList.remove('show');
+  finishQuiz(false);
+};
+
+document.getElementById('quit-btn').onclick = () => {
+  if (!quizState || confirm('Quit this session? Progress for this session will be lost.')){
+    quizState = null;
+    showScreen('home');
+    renderHome();
+  }
+};
+
+function updateProgressBar(){
+  const mastered = quizState.total - quizState.queue.length;
+  const pct = Math.round((mastered / quizState.total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${mastered} / ${quizState.total} mastered`;
+  document.getElementById('streak-text').textContent = `Streak: ${quizState.streak}`;
+}
+
+function finishQuiz(completed){
+  if (!quizState) return;
+  const earned = [];
+
+  // Award medals ONLY if the session actually completed all questions
+  // AND covered exactly one block (mixed mode does not award per-block medals).
+  if (completed && quizState.blocks.length === 1){
+    const block = quizState.blocks[0];
+    const prog = loadProgress();
+    const s = blockState(prog, block.id);
+    s.completions++;
+    // first-time finishing this block
+    if (!s.medals.includes('finished')){
+      s.medals.push('finished'); earned.push('finished');
+    }
+    // 3× completed
+    if (s.completions >= 3 && !s.medals.includes('threeX')){
+      s.medals.push('threeX'); earned.push('threeX');
+    }
+    // perfect run (no wrong answers this whole session)
+    if (!quizState.sessionWrongAny){
+      s.perfectRuns++;
+      // award a perfect medal every time, so it stacks (counts how many perfect runs)
+      s.medals.push('perfect'); earned.push('perfect');
+    }
+    saveProgress(prog);
+  }
+
+  // Stats
+  const answered = quizState.sessionAnswered;
+  const correct = quizState.sessionCorrect;
+  const accuracy = answered ? Math.round((correct / answered) * 100) : 0;
+
+  document.getElementById('end-title').textContent = completed ? 'All mastered! 🎉' : 'Session stopped';
+  document.getElementById('end-sub').textContent = completed
+    ? quizState.title
+    : `${quizState.queue.length} questions still unmastered in ${quizState.title}`;
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-accuracy').textContent = accuracy + '%';
+
+  const earnedEl = document.getElementById('earned-medals');
+  earnedEl.innerHTML = earned.map(m => {
+    const def = MEDAL_DEFS[m];
+    return `<span class="medal ${def.cls}"><span class="ic">${def.ic}</span>New medal: ${def.label}</span>`;
+  }).join('');
+
+  showScreen('end');
+}
+
+document.getElementById('end-again').onclick = () => {
+  if (!quizState) { showScreen('home'); renderHome(); return; }
+  startQuiz(quizState.blocks, quizState.title);
+};
+document.getElementById('end-home').onclick = () => {
+  quizState = null;
+  showScreen('home');
+  renderHome();
+};
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+// ---- boot ----
+renderHome();
+</script>
+
+</body>
+</html>
