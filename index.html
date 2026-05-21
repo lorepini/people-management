@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>People Management — A Study Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Per-block accent colors */
+  --b1:#5b6cff;  --b1-soft:#eef0ff;
+  --b2:#d97706;  --b2-soft:#fef3c7;
+  --b3:#0d9488;  --b3-soft:#ccfbf1;
+  --b4:#e11d48;  --b4-soft:#ffe4e6;
+  --b5:#15803d;  --b5-soft:#dcfce7;
+  --b6:#7c3aed;  --b6-soft:#ede9fe;
+
+  /* Neutral palette */
+  --bg:#fbfaf7;        /* warm cream */
+  --panel:#ffffff;
+  --ink:#1c1c1f;
+  --body:#2d2d33;
+  --muted:#6b7280;
+  --line:#e8e6df;
+  --soft:#f3f1ec;
+  --accent:#1c1c1f;
+
+  --serif:'Fraunces', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --mono:'Atkinson Hyperlegible', monospace;
+
+  --maxw:760px;
+  --maxw-wide:1080px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{
+  font-family:var(--serif);
+  background:var(--bg);
+  color:var(--body);
+  line-height:1.65;
+  font-size:18px;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+
+/* ── Sticky navigation ─────────────────────────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(251,250,247,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  font-family:var(--sans);
+}
+.nav-inner{
+  max-width:var(--maxw-wide);margin:0 auto;
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.nav-brand{font-family:var(--serif);font-weight:500;font-size:1rem;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.nav-brand i{font-style:italic;color:var(--muted);font-weight:400}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap}
+.nav-link{
+  text-decoration:none;font-size:.82rem;font-weight:600;
+  padding:7px 11px;border-radius:6px;color:var(--muted);
+  transition:color .15s, background-color .15s;
+}
+.nav-link:hover,.nav-link.active{color:var(--ink);background:var(--soft)}
+.nav-link[data-block="1"].active{color:var(--b1);background:var(--b1-soft)}
+.nav-link[data-block="2"].active{color:var(--b2);background:var(--b2-soft)}
+.nav-link[data-block="3"].active{color:var(--b3);background:var(--b3-soft)}
+.nav-link[data-block="4"].active{color:var(--b4);background:var(--b4-soft)}
+.nav-link[data-block="5"].active{color:var(--b5);background:var(--b5-soft)}
+.nav-link[data-block="6"].active{color:var(--b6);background:var(--b6-soft)}
+
+/* ── Generic layout ────────────────────────────────────────────────── */
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.container-wide{max-width:var(--maxw-wide);margin:0 auto;padding:0 24px}
+section{padding:64px 0}
+
+/* ── Hero ──────────────────────────────────────────────────────────── */
+.hero{
+  padding:80px 0 56px;
+  background:linear-gradient(180deg, #fbfaf7 0%, #ffffff 100%);
+  border-bottom:1px solid var(--line);
+}
+.hero-eyebrow{
+  font-family:var(--sans);font-size:.78rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+  margin-bottom:16px;
+}
+.hero h1{
+  font-family:var(--serif);
+  font-size:clamp(2.4rem, 6vw, 3.8rem);
+  font-weight:500;font-variation-settings:"opsz" 144;
+  line-height:1.05;letter-spacing:-.02em;color:var(--ink);
+  margin-bottom:18px;
+}
+.hero h1 em{font-style:italic;color:var(--muted);font-weight:400}
+.hero .deck{
+  font-size:1.15rem;color:var(--body);max-width:600px;line-height:1.55;
+  margin-bottom:36px;
+}
+.hero .meta{
+  display:flex;gap:22px;font-family:var(--sans);font-size:.82rem;color:var(--muted);flex-wrap:wrap;
+  border-top:1px solid var(--line);padding-top:18px;margin-top:14px;
+}
+.hero .meta b{color:var(--ink);font-weight:600}
+.hero-tools{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;
+}
+.tool-btn{
+  font-family:var(--sans);font-size:.86rem;font-weight:600;
+  padding:10px 16px;border-radius:6px;text-decoration:none;
+  border:1px solid var(--ink);color:var(--ink);background:transparent;
+  transition:background-color .15s, color .15s;
+}
+.tool-btn:hover{background:var(--ink);color:var(--bg)}
+.tool-btn.filled{background:var(--ink);color:var(--bg)}
+.tool-btn.filled:hover{background:transparent;color:var(--ink)}
+
+/* ── Employee journey timeline (hero diagram) ──────────────────────── */
+.journey-wrap{margin-top:48px}
+.journey-label{
+  font-family:var(--sans);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
+  margin-bottom:14px;text-align:center;
+}
+.journey{
+  width:100%;height:auto;display:block;
+}
+
+/* ── Section labels & headings ─────────────────────────────────────── */
+.section-label{
+  font-family:var(--sans);font-size:.78rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+  margin-bottom:8px;
+}
+h2{
+  font-family:var(--serif);font-size:clamp(1.9rem, 4vw, 2.6rem);
+  font-weight:500;font-variation-settings:"opsz" 144;
+  line-height:1.15;letter-spacing:-.015em;color:var(--ink);
+  margin-bottom:14px;
+}
+h3{
+  font-family:var(--serif);font-size:1.5rem;font-weight:600;
+  line-height:1.25;letter-spacing:-.01em;color:var(--ink);
+  margin:36px 0 12px;
+}
+h4{
+  font-family:var(--sans);font-size:.85rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink);
+  margin:24px 0 10px;
+}
+.lead{
+  font-family:var(--serif);font-style:italic;font-size:1.18rem;
+  color:var(--body);line-height:1.55;margin-bottom:32px;
+}
+p{margin-bottom:18px}
+p strong{color:var(--ink);font-weight:600}
+p em{font-style:italic}
+ul,ol{margin:0 0 18px 22px}
+li{margin-bottom:8px}
+li strong{color:var(--ink)}
+
+/* ── Big-picture section ───────────────────────────────────────────── */
+.big-picture{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.big-picture-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:32px;
+}
+@media (max-width:780px){.big-picture-grid{grid-template-columns:1fr;gap:32px}}
+.diagram-card{
+  border:1px solid var(--line);border-radius:10px;padding:24px;background:#fff;
+}
+.diagram-card h4{margin-top:0;margin-bottom:14px}
+.diagram-card svg{width:100%;height:auto;display:block;margin:8px 0}
+.diagram-caption{font-family:var(--sans);font-size:.82rem;color:var(--muted);margin-top:12px;font-style:italic}
+
+/* ── Chapter (per block) ───────────────────────────────────────────── */
+.chapter{
+  padding:80px 0 64px;
+  border-bottom:1px solid var(--line);
+  position:relative;
+}
+.chapter-eyebrow{
+  font-family:var(--sans);font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.18em;
+  margin-bottom:14px;
+}
+.chapter[data-block="1"] .chapter-eyebrow{color:var(--b1)}
+.chapter[data-block="2"] .chapter-eyebrow{color:var(--b2)}
+.chapter[data-block="3"] .chapter-eyebrow{color:var(--b3)}
+.chapter[data-block="4"] .chapter-eyebrow{color:var(--b4)}
+.chapter[data-block="5"] .chapter-eyebrow{color:var(--b5)}
+.chapter[data-block="6"] .chapter-eyebrow{color:var(--b6)}
+.chapter h2 .num{
+  font-family:var(--sans);font-weight:700;font-size:.45em;vertical-align:middle;
+  padding:4px 9px;border-radius:5px;margin-right:14px;
+  position:relative;top:-4px;
+}
+.chapter[data-block="1"] h2 .num{background:var(--b1-soft);color:var(--b1)}
+.chapter[data-block="2"] h2 .num{background:var(--b2-soft);color:var(--b2)}
+.chapter[data-block="3"] h2 .num{background:var(--b3-soft);color:var(--b3)}
+.chapter[data-block="4"] h2 .num{background:var(--b4-soft);color:var(--b4)}
+.chapter[data-block="5"] h2 .num{background:var(--b5-soft);color:var(--b5)}
+.chapter[data-block="6"] h2 .num{background:var(--b6-soft);color:var(--b6)}
+
+/* ── Mindmap (CSS-based concept tree) ──────────────────────────────── */
+.mindmap{
+  margin:32px 0 40px;padding:32px 24px;
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+}
+.mindmap-title{
+  font-family:var(--sans);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--muted);text-align:center;margin-bottom:24px;
+}
+.mm-center{
+  display:flex;justify-content:center;margin-bottom:0;
+}
+.mm-node-main{
+  font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--ink);
+  padding:14px 26px;border:2px solid var(--ink);border-radius:999px;background:#fff;
+}
+.mm-branches{
+  display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:14px;margin-top:28px;position:relative;
+}
+.mm-branch{
+  padding:16px 18px;border-radius:10px;
+  font-family:var(--sans);
+}
+.mm-branch h5{
+  font-family:var(--sans);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  margin:0 0 8px;color:inherit;
+}
+.mm-branch ul{margin:0 0 0 16px;font-family:var(--sans)}
+.mm-branch li{font-size:.86rem;line-height:1.45;color:var(--body);margin-bottom:4px}
+.mm-branch li b{color:var(--ink);font-weight:600}
+
+.chapter[data-block="1"] .mm-branch{background:var(--b1-soft);color:var(--b1)}
+.chapter[data-block="2"] .mm-branch{background:var(--b2-soft);color:var(--b2)}
+.chapter[data-block="3"] .mm-branch{background:var(--b3-soft);color:var(--b3)}
+.chapter[data-block="4"] .mm-branch{background:var(--b4-soft);color:var(--b4)}
+.chapter[data-block="5"] .mm-branch{background:var(--b5-soft);color:var(--b5)}
+.chapter[data-block="6"] .mm-branch{background:var(--b6-soft);color:var(--b6)}
+
+/* ── Framework spotlight cards ─────────────────────────────────────── */
+.spotlight{
+  margin:24px 0;padding:24px;
+  background:#fff;border:1px solid var(--line);border-radius:10px;
+}
+.spotlight-head{
+  display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap;
+}
+.spotlight-name{
+  font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--ink);
+}
+.spotlight-author{
+  font-family:var(--sans);font-size:.78rem;color:var(--muted);font-style:italic;
+}
+.spotlight-tag{
+  font-family:var(--sans);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  padding:2px 8px;border-radius:4px;
+}
+.chapter[data-block="1"] .spotlight-tag{background:var(--b1-soft);color:var(--b1)}
+.chapter[data-block="2"] .spotlight-tag{background:var(--b2-soft);color:var(--b2)}
+.chapter[data-block="3"] .spotlight-tag{background:var(--b3-soft);color:var(--b3)}
+.chapter[data-block="4"] .spotlight-tag{background:var(--b4-soft);color:var(--b4)}
+.chapter[data-block="5"] .spotlight-tag{background:var(--b5-soft);color:var(--b5)}
+.chapter[data-block="6"] .spotlight-tag{background:var(--b6-soft);color:var(--b6)}
+.spotlight-summary{
+  font-family:var(--serif);font-style:italic;color:var(--muted);margin-bottom:14px;font-size:1rem;
+}
+.spotlight-body{font-family:var(--sans);font-size:.92rem;line-height:1.55}
+.spotlight-body ul{margin:8px 0 0 18px}
+.spotlight-body li{margin-bottom:4px}
+.spotlight-viz{margin:18px 0 6px}
+.spotlight-viz svg{width:100%;height:auto;display:block}
+
+/* ── Pull-quote / debate / case ────────────────────────────────────── */
+.pull{
+  margin:32px 0;padding:24px 28px;border-left:4px solid var(--ink);background:#fff;
+  font-family:var(--serif);font-style:italic;font-size:1.1rem;line-height:1.55;color:var(--body);
+}
+.chapter[data-block="1"] .pull{border-left-color:var(--b1)}
+.chapter[data-block="2"] .pull{border-left-color:var(--b2)}
+.chapter[data-block="3"] .pull{border-left-color:var(--b3)}
+.chapter[data-block="4"] .pull{border-left-color:var(--b4)}
+.chapter[data-block="5"] .pull{border-left-color:var(--b5)}
+.chapter[data-block="6"] .pull{border-left-color:var(--b6)}
+.pull cite{
+  display:block;font-style:normal;font-family:var(--sans);font-size:.78rem;
+  color:var(--muted);margin-top:10px;text-transform:uppercase;letter-spacing:.08em;
+}
+
+.callout{
+  margin:32px 0;padding:24px 28px;border:1px dashed var(--line);border-radius:10px;background:#fff;
+}
+.callout h4{margin-top:0}
+.callout ul{font-family:var(--sans);font-size:.92rem}
+
+.moves{
+  margin:32px 0 0;padding:24px 28px;border-radius:10px;
+  background:var(--soft);
+}
+.moves h4{margin-top:0}
+.moves ul{font-family:var(--sans);font-size:.92rem;list-style:none;margin-left:0}
+.moves li{padding-left:24px;position:relative;margin-bottom:8px;line-height:1.55}
+.moves li::before{
+  content:"→";position:absolute;left:0;top:0;font-weight:700;color:var(--ink);
+}
+.chapter[data-block="1"] .moves li::before{color:var(--b1)}
+.chapter[data-block="2"] .moves li::before{color:var(--b2)}
+.chapter[data-block="3"] .moves li::before{color:var(--b3)}
+.chapter[data-block="4"] .moves li::before{color:var(--b4)}
+.chapter[data-block="5"] .moves li::before{color:var(--b5)}
+.chapter[data-block="6"] .moves li::before{color:var(--b6)}
+
+/* ── Vertical timeline (authors) ───────────────────────────────────── */
+.timeline-section{background:#fff;border-top:1px solid var(--line)}
+.timeline{
+  position:relative;max-width:680px;margin:32px auto 0;padding-left:32px;
+  border-left:2px solid var(--line);
+}
+.tl-decade{
+  position:relative;padding:18px 0 8px 18px;margin-bottom:12px;
+}
+.tl-decade::before{
+  content:"";position:absolute;left:-40px;top:24px;width:14px;height:14px;
+  background:var(--ink);border-radius:50%;border:3px solid var(--bg);
+}
+.tl-decade h4{
+  font-family:var(--sans);font-size:.95rem;font-weight:700;margin:0 0 10px;color:var(--ink);
+  text-transform:none;letter-spacing:0;
+}
+.tl-decade ul{font-family:var(--sans);font-size:.88rem;color:var(--body);list-style:none;margin-left:0}
+.tl-decade li{margin-bottom:6px}
+.tl-decade li b{color:var(--ink)}
+
+/* ── Footer ────────────────────────────────────────────────────────── */
+footer{
+  padding:48px 0 64px;text-align:center;color:var(--muted);
+  font-family:var(--sans);font-size:.84rem;background:var(--bg);
+  border-top:1px solid var(--line);
+}
+footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ── Responsive tweaks ─────────────────────────────────────────────── */
+@media (max-width:600px){
+  body{font-size:17px}
+  .hero{padding:48px 0 32px}
+  section{padding:48px 0}
+  .chapter{padding:56px 0 48px}
+  .mindmap{padding:24px 16px}
+  .spotlight{padding:18px}
+  .nav-links{gap:2px}
+  .nav-link{padding:6px 8px;font-size:.76rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Sticky navigation ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">People Management <i>· a study companion</i></a>
+    <div class="nav-links">
+      <a href="#picture" class="nav-link">Big picture</a>
+      <a href="#block1" class="nav-link" data-block="1">Block 1</a>
+      <a href="#block2" class="nav-link" data-block="2">Block 2</a>
+      <a href="#block3" class="nav-link" data-block="3">Block 3</a>
+      <a href="#block4" class="nav-link" data-block="4">Block 4</a>
+      <a href="#block5" class="nav-link" data-block="5">Block 5</a>
+      <a href="#block6" class="nav-link" data-block="6">Block 6</a>
+      <a href="#timeline" class="nav-link">Timeline</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────────────────────────────── -->
+<header class="hero" id="top">
+  <div class="container">
+    <div class="hero-eyebrow">A study companion · ESADE C8</div>
+    <h1>People Management <em>— the whole arc</em></h1>
+    <p class="deck">How firms turn strategy into people decisions: hire the right person, design the right role, manage what they do, pay them, and bargain with them. Six blocks, ~30 frameworks, three big debates, one common thread — <em>people management is design, not administration</em>.</p>
+    <div class="hero-tools">
+      <a class="tool-btn filled" href="mcq_trainer.html">Practice MCQs ↗</a>
+      <a class="tool-btn" href="frameworks_cheatsheet.pdf">Cheat sheet (PDF) ↗</a>
+    </div>
+    <div class="meta">
+      <span><b>6</b> blocks</span>
+      <span><b>~30</b> core frameworks</span>
+      <span><b>180</b> practice questions</span>
+      <span><b>87</b> framework cards</span>
+    </div>
+
+    <!-- ─── The employee journey timeline ─────────────────────────────── -->
+    <div class="journey-wrap">
+      <div class="journey-label">The employee journey — the spine of the course</div>
+      <svg class="journey" viewBox="0 0 1080 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Employee journey timeline">
+        <defs>
+          <linearGradient id="jline" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#5b6cff"/>
+            <stop offset="20%" stop-color="#d97706"/>
+            <stop offset="40%" stop-color="#0d9488"/>
+            <stop offset="60%" stop-color="#e11d48"/>
+            <stop offset="80%" stop-color="#15803d"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+        </defs>
+        <!-- main line -->
+        <line x1="60" y1="100" x2="1020" y2="100" stroke="url(#jline)" stroke-width="3"/>
+        <!-- stages -->
+        <g font-family="Inter, sans-serif" font-size="13" fill="#1c1c1f" text-anchor="middle">
+          <!-- node 1 -->
+          <circle cx="90" cy="100" r="9" fill="#5b6cff"/>
+          <text x="90" y="80" font-weight="600">Recruit</text>
+          <text x="90" y="130" fill="#6b7280" font-size="11">Block 1–2</text>
+          <!-- node 2 -->
+          <circle cx="245" cy="100" r="9" fill="#d97706"/>
+          <text x="245" y="80" font-weight="600">Hire</text>
+          <text x="245" y="130" fill="#6b7280" font-size="11">Block 2–3</text>
+          <!-- node 3 -->
+          <circle cx="400" cy="100" r="9" fill="#0d9488"/>
+          <text x="400" y="80" font-weight="600">Onboard</text>
+          <text x="400" y="130" fill="#6b7280" font-size="11">Block 3</text>
+          <!-- node 4 -->
+          <circle cx="555" cy="100" r="9" fill="#e11d48"/>
+          <text x="555" y="80" font-weight="600">Engage &amp; Manage</text>
+          <text x="555" y="130" fill="#6b7280" font-size="11">Block 4</text>
+          <!-- node 5 -->
+          <circle cx="745" cy="100" r="9" fill="#15803d"/>
+          <text x="745" y="80" font-weight="600">Pay &amp; Reward</text>
+          <text x="745" y="130" fill="#6b7280" font-size="11">Block 5</text>
+          <!-- node 6 -->
+          <circle cx="935" cy="100" r="9" fill="#7c3aed"/>
+          <text x="935" y="80" font-weight="600">Negotiate &amp; Exit</text>
+          <text x="935" y="130" fill="#6b7280" font-size="11">Block 6</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ─── BIG PICTURE ───────────────────────────────────────────────────────── -->
+<section class="big-picture" id="picture">
+  <div class="container">
+    <div class="section-label">§ 0 — The big picture</div>
+    <h2>Two maps, one engine</h2>
+    <p class="lead">Almost every framework in this course refines two ideas: <em>how HRM connects to outcomes</em>, and <em>what makes people perform</em>. Anchor yourself here first — the rest is detail.</p>
+
+    <div class="big-picture-grid">
+
+      <!-- AMO triangle -->
+      <div class="diagram-card">
+        <h4>The engine — AMO</h4>
+        <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- Triangle -->
+          <polygon points="180,30 40,210 320,210" fill="none" stroke="#1c1c1f" stroke-width="1.5"/>
+          <!-- Corner labels -->
+          <g font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1c1c1f" text-anchor="middle">
+            <text x="180" y="22">Ability</text>
+            <text x="30" y="228">Motivation</text>
+            <text x="330" y="228">Opportunity</text>
+          </g>
+          <!-- Center -->
+          <circle cx="180" cy="150" r="46" fill="#1c1c1f"/>
+          <text x="180" y="148" text-anchor="middle" fill="#fff" font-family="Fraunces, serif" font-size="14" font-weight="600">Performance</text>
+          <text x="180" y="168" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="11">A × M × O</text>
+        </svg>
+        <p class="diagram-caption">A × M × O is multiplicative: any zero kills performance. The whole course slots into one of the three legs.</p>
+      </div>
+
+      <!-- Harvard map -->
+      <div class="diagram-card">
+        <h4>The map — Harvard Model</h4>
+        <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11" fill="#1c1c1f">
+            <!-- Inputs -->
+            <rect x="10" y="30" width="80" height="60" rx="6" fill="#eef0ff" stroke="#5b6cff"/>
+            <text x="50" y="55" text-anchor="middle" font-weight="700">Stakeholder</text>
+            <text x="50" y="70" text-anchor="middle" font-weight="700">interests</text>
+            <text x="50" y="84" text-anchor="middle" fill="#6b7280" font-size="9">+ situational</text>
+            <!-- Policies -->
+            <rect x="100" y="80" width="80" height="60" rx="6" fill="#fff" stroke="#1c1c1f"/>
+            <text x="140" y="105" text-anchor="middle" font-weight="700">HR policy</text>
+            <text x="140" y="118" text-anchor="middle" font-weight="700">choices</text>
+            <text x="140" y="132" text-anchor="middle" fill="#6b7280" font-size="9">(4 areas)</text>
+            <!-- Outcomes -->
+            <rect x="190" y="80" width="80" height="60" rx="6" fill="#1c1c1f"/>
+            <text x="230" y="105" text-anchor="middle" font-weight="700" fill="#fff">HR outcomes</text>
+            <text x="230" y="120" text-anchor="middle" fill="#fff" font-size="10">(4 C's)</text>
+            <!-- Consequences -->
+            <rect x="280" y="30" width="80" height="60" rx="6" fill="#fff" stroke="#1c1c1f"/>
+            <text x="320" y="50" text-anchor="middle" font-weight="700">Long-term</text>
+            <text x="320" y="64" text-anchor="middle" font-weight="700">consequences</text>
+            <text x="320" y="78" text-anchor="middle" fill="#6b7280" font-size="9">indiv · org · social</text>
+            <!-- Arrows -->
+            <line x1="90" y1="60" x2="100" y2="100" stroke="#1c1c1f" stroke-width="1.2" marker-end="url(#a1)"/>
+            <line x1="180" y1="110" x2="190" y2="110" stroke="#1c1c1f" stroke-width="1.2" marker-end="url(#a1)"/>
+            <line x1="270" y1="100" x2="280" y2="80" stroke="#1c1c1f" stroke-width="1.2" marker-end="url(#a1)"/>
+            <!-- 4 Cs label band -->
+            <text x="230" y="170" text-anchor="middle" font-size="9.5" fill="#6b7280">Commitment · Competence</text>
+            <text x="230" y="183" text-anchor="middle" font-size="9.5" fill="#6b7280">Congruence · Cost-effectiveness</text>
+          </g>
+          <defs>
+            <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#1c1c1f"/>
+            </marker>
+          </defs>
+        </svg>
+        <p class="diagram-caption">Multistakeholder, "soft" HRM. Stakeholders shape policies → policies produce 4 C's → which produce well-being for individuals, the firm, and society. The Michigan model is the harder, shareholder-only counterpart.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 1                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block1" data-block="1">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter one · Block 1</div>
+    <h2><span class="num">01</span>Foundations: SHRM, engagement &amp; commitment</h2>
+    <p class="lead">Before HRM is a system, it's a stance. What does the firm owe its people? What do its people owe back?</p>
+
+    <p>The block introduces the two grand maps of HRM (Harvard vs Michigan), the spine that makes any HR system work (AMO), and the constructs that explain why people show up <em>and</em> stay engaged (commitment + engagement + motivation). The threads tie together through a clear claim: <strong>HRM is a system of choices, and the choices have consequences far beyond profit</strong>.</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — the territory of Block 1</div>
+      <div class="mm-center"><div class="mm-node-main">The HR system</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>The two grand maps</h5>
+          <ul>
+            <li><b>Harvard</b> — multistakeholder, 4 C's</li>
+            <li><b>Michigan</b> — matching, HR cycle</li>
+            <li><b>Hard ↔ Soft</b> — the central debate</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>The performance spine</h5>
+          <ul>
+            <li><b>AMO</b> — A × M × O (multiplicative)</li>
+            <li>Any zero = zero performance</li>
+            <li>The whole course = one of the three legs</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Why people care</h5>
+          <ul>
+            <li><b>Engagement</b> — Vigor · Dedication · Absorption</li>
+            <li><b>Commitment</b> — Affective · Normative · Continuance</li>
+            <li><b>ToMo</b> — direct vs indirect motives</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>The deeper "why"</h5>
+          <ul>
+            <li><b>SDT</b> — autonomy · competence · relatedness</li>
+            <li><b>SET</b> — reciprocal obligations</li>
+            <li><b>COR</b> — resource spirals</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>HRM's broader claim</h5>
+          <ul>
+            <li><b>Beer/Boselie/Brewster</b> — multistakeholder thesis</li>
+            <li><b>POS</b> — perceived support → engagement</li>
+            <li><b>DREAMS</b> — what makes a workplace work</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>The dark side</h5>
+          <ul>
+            <li><b>UPB</b> — engaged people lying <em>for</em> the firm</li>
+            <li>Too much commitment ≠ better</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Framework spotlights -->
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Harvard Model</span>
+        <span class="spotlight-author">Beer, Spector, Lawrence, Mills &amp; Walton (1984)</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">A multistakeholder map: situational forces + stakeholder interests shape HR policy choices → HR outcomes → long-term well-being.</div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Four policy areas</b> — employee influence, HR flow, reward systems, work systems</li>
+          <li><b>Four C's (HR outcomes)</b> — Commitment, Competence, Congruence, Cost-effectiveness</li>
+          <li><b>Long-term consequences</b> — individual, organizational and societal well-being</li>
+          <li><b>Move</b> — the lens to redesign whole HR systems (Ryanair); pair with the Beer/Boselie/Brewster multistakeholder critique</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Total Motivation (ToMo)</span>
+        <span class="spotlight-author">Doshi &amp; McGregor (HBR)</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Six motives: three direct (lift performance), three indirect (destroy it).</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="13">
+            <!-- Direct (left) -->
+            <rect x="20" y="20" width="260" height="120" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="150" y="42" text-anchor="middle" font-weight="700" fill="#15803d" font-size="11" letter-spacing="1">DIRECT — boost performance</text>
+            <text x="60" y="80" font-weight="600" fill="#1c1c1f">Play</text>
+            <text x="60" y="98" font-size="10" fill="#6b7280">curiosity, joy in work</text>
+            <text x="150" y="80" font-weight="600" fill="#1c1c1f">Purpose</text>
+            <text x="150" y="98" font-size="10" fill="#6b7280">meaning of work</text>
+            <text x="240" y="80" font-weight="600" fill="#1c1c1f">Potential</text>
+            <text x="240" y="98" font-size="10" fill="#6b7280">growth and mastery</text>
+            <!-- Indirect (right) -->
+            <rect x="320" y="20" width="260" height="120" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="450" y="42" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="11" letter-spacing="1">INDIRECT — kill performance</text>
+            <text x="350" y="80" font-weight="600" fill="#1c1c1f">Emotional</text>
+            <text x="350" y="98" font-size="10" fill="#6b7280">fear, guilt, shame</text>
+            <text x="440" y="80" font-weight="600" fill="#1c1c1f">Economic</text>
+            <text x="440" y="98" font-size="10" fill="#6b7280">pay or punishment</text>
+            <text x="530" y="80" font-weight="600" fill="#1c1c1f">Inertia</text>
+            <text x="530" y="98" font-size="10" fill="#6b7280">"why am I here?"</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>ToMo score</b> — weighted index from -100 to +100 that predicts performance and customer outcomes</li>
+          <li><b>Move</b> — cite when explaining culture-as-performance-engine; contrast with extrinsic-only Michigan logic</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Engagement vs Commitment — be precise</span>
+        <span class="spotlight-author">Schaufeli &amp; Bakker / Meyer &amp; Allen</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Two different constructs. Engagement is a state; commitment is a bond.</div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Engagement (VDA)</b> — <i>Vigor</i> (energy), <i>Dedication</i> (pride/inspiration), <i>Absorption</i> (flow)</li>
+          <li><b>Commitment (3-component)</b> — <i>Affective</i> (want to), <i>Normative</i> (ought to), <i>Continuance</i> (have to)</li>
+          <li><b>Best outcomes</b> — Affective commitment. Continuance traps people; normative is mixed</li>
+          <li><b>Move</b> — never conflate the two. If asked about "engagement", give Schaufeli; if about "why people stay", give Meyer &amp; Allen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull">
+      "HRM should serve a wide set of stakeholders — shareholders, employees, unions, community and government — and balance economic, individual and societal well-being rather than only shareholder returns."
+      <cite>Beer, Boselie &amp; Brewster · 2015 · the multistakeholder thesis</cite>
+    </div>
+
+    <div class="callout">
+      <h4>The debate to lead with — Hard vs Soft HRM</h4>
+      <ul>
+        <li><b>Hard (Michigan, Fombrun et al.)</b> — instrumental, shareholder-driven, matching model. HR follows strategy.</li>
+        <li><b>Soft (Harvard, Beer et al.)</b> — developmental, multistakeholder, Four C's. HR shapes strategy too.</li>
+        <li><b>Where you land</b> — most exam answers should open by declaring a stance, even if you go nuanced after.</li>
+      </ul>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Anchor any whole-HRM essay on either Harvard or Michigan — declare your stance early.</li>
+        <li>Cite AMO to explain <em>any</em> failure to perform — it's multiplicative, so the bottleneck is always one of A, M, or O.</li>
+        <li>Distinguish engagement (state, VDA) from commitment (bond, 3-component). Mix them up and the examiner notices.</li>
+        <li>Use UPB to challenge "more engagement = better" — too much commitment fuels unethical behavior <em>for</em> the firm.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 2                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block2" data-block="2">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter two · Block 2</div>
+    <h2><span class="num">02</span>Designing the role &amp; planning the workforce</h2>
+    <p class="lead">Once HRM has a stance, design follows. A great person in a broken job still fails — so design the job first, then plan who fills it.</p>
+
+    <p>Block 2 covers four moves that come <em>before</em> hiring anyone: designing the job (Simons, Hackman &amp; Oldham), analysing the job (KSAOs), planning the workforce (demand vs supply), and structuring recruitment and selection (Armstrong's process). The iconic visual is Simons' four sliders.</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — from role design to hiring decision</div>
+      <div class="mm-center"><div class="mm-node-main">Designing roles &amp; choosing people</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>Job design</h5>
+          <ul>
+            <li><b>Simons' Four Spans</b> — Control + Support (supply) vs Accountability + Influence (demand)</li>
+            <li><b>JCM</b> — 5 characteristics → 3 states → outcomes</li>
+            <li><b>Job breadth</b> — enrichment / enlargement / rotation</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Job analysis</h5>
+          <ul>
+            <li><b>Description</b> — what the job is</li>
+            <li><b>Specification</b> — what the person must be</li>
+            <li><b>KSAOs</b> (Campion) — Knowledge, Skills, Abilities, Other</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Workforce planning</h5>
+          <ul>
+            <li>Right person, right job, right time, right cost</li>
+            <li><b>Demand &gt; Supply</b> — hire / train / retain / overtime</li>
+            <li><b>Demand &lt; Supply</b> — freeze / redeploy / voluntary exit / layoff</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Recruitment</h5>
+          <ul>
+            <li><b>Internal</b> — cheap, cultural fit, creates a new vacancy</li>
+            <li><b>External</b> — fresh skills, costly, no track record</li>
+            <li><b>Employer brand / EVP</b> — the firm sells itself too</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Selection (6 steps)</h5>
+          <ul>
+            <li>Application → tests → interviews → references → physical → offer</li>
+            <li><b>RACI</b> — clarify ownership at every step</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Layoffs (when needed)</h5>
+          <ul>
+            <li>Seniority · Status · Skill · Merit · Personal</li>
+            <li>Defend the choice with the criterion</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Simons' Four Spans of Job Design</span>
+        <span class="spotlight-author">Simons (HBR)</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Design jobs so the supply of resources matches the demand on the role — sliders form an "X" when balanced.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- Title bars -->
+            <text x="120" y="22" text-anchor="middle" font-weight="700" fill="#d97706" font-size="11" letter-spacing="1.5">SUPPLY (resources)</text>
+            <text x="480" y="22" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="11" letter-spacing="1.5">DEMAND (pressure)</text>
+            <!-- Crossing lines -->
+            <line x1="40" y1="60" x2="560" y2="180" stroke="#d97706" stroke-width="2"/>
+            <line x1="40" y1="180" x2="560" y2="60" stroke="#e11d48" stroke-width="2"/>
+            <!-- Labels at ends -->
+            <text x="40" y="50" text-anchor="middle" font-weight="600" fill="#d97706">Control</text>
+            <text x="40" y="200" text-anchor="middle" font-weight="600" fill="#e11d48">Accountability</text>
+            <text x="560" y="50" text-anchor="middle" font-weight="600" fill="#e11d48">Influence</text>
+            <text x="560" y="200" text-anchor="middle" font-weight="600" fill="#d97706">Support</text>
+            <!-- Center label -->
+            <rect x="260" y="105" width="80" height="30" rx="6" fill="#1c1c1f"/>
+            <text x="300" y="125" text-anchor="middle" fill="#fff" font-weight="600">Balanced</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Supply</b> — Span of <i>Control</i> (resources commanded) + Span of <i>Support</i> (help available)</li>
+          <li><b>Demand</b> — Span of <i>Accountability</i> (metrics measured) + Span of <i>Influence</i> (cross-unit cooperation needed)</li>
+          <li><b>Crisis diagnosis</b> — demand &gt; supply = crisis of <i>resources</i>; supply &gt; demand = crisis of <i>control</i></li>
+          <li><b>Move</b> — the central Block 2 tool. Map any "broken role" question to the four sliders</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Job Characteristics Model</span>
+        <span class="spotlight-author">Hackman &amp; Oldham</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Five job features create three psychological states that drive motivation, satisfaction and effectiveness.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- Column 1: 5 characteristics -->
+            <rect x="10" y="10" width="160" height="180" rx="8" fill="#fef3c7" stroke="#d97706"/>
+            <text x="90" y="30" text-anchor="middle" font-weight="700" fill="#d97706">5 characteristics</text>
+            <text x="90" y="55" text-anchor="middle" fill="#1c1c1f">Skill variety</text>
+            <text x="90" y="75" text-anchor="middle" fill="#1c1c1f">Task identity</text>
+            <text x="90" y="95" text-anchor="middle" fill="#1c1c1f">Task significance</text>
+            <text x="90" y="115" text-anchor="middle" fill="#1c1c1f">Autonomy</text>
+            <text x="90" y="135" text-anchor="middle" fill="#1c1c1f">Feedback</text>
+            <text x="90" y="170" text-anchor="middle" fill="#6b7280" font-size="9" font-style="italic">MPS = ((SV+TI+TS)/3)</text>
+            <text x="90" y="183" text-anchor="middle" fill="#6b7280" font-size="9" font-style="italic">× Autonomy × Feedback</text>
+            <!-- Arrow -->
+            <line x1="175" y1="100" x2="215" y2="100" stroke="#1c1c1f" stroke-width="1.5" marker-end="url(#a2)"/>
+            <!-- Column 2: 3 psychological states -->
+            <rect x="220" y="10" width="160" height="180" rx="8" fill="#fff" stroke="#1c1c1f"/>
+            <text x="300" y="30" text-anchor="middle" font-weight="700">3 psych states</text>
+            <text x="300" y="65" text-anchor="middle">Meaningfulness</text>
+            <text x="300" y="100" text-anchor="middle">Responsibility</text>
+            <text x="300" y="135" text-anchor="middle">Knowledge of results</text>
+            <!-- Arrow -->
+            <line x1="385" y1="100" x2="425" y2="100" stroke="#1c1c1f" stroke-width="1.5" marker-end="url(#a2)"/>
+            <!-- Column 3: outcomes -->
+            <rect x="430" y="10" width="160" height="180" rx="8" fill="#1c1c1f"/>
+            <text x="510" y="30" text-anchor="middle" font-weight="700" fill="#fff">Outcomes</text>
+            <text x="510" y="65" text-anchor="middle" fill="#fff">Motivation</text>
+            <text x="510" y="100" text-anchor="middle" fill="#fff">Satisfaction</text>
+            <text x="510" y="135" text-anchor="middle" fill="#fff">Performance</text>
+          </g>
+          <defs>
+            <marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#1c1c1f"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Workforce Planning — demand vs supply</span>
+        <span class="spotlight-author">Lepak &amp; Gowan</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Right person, right job, right time, right cost. The action menu depends on which way the gap runs.</div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Demand &gt; Supply</b> — external recruitment, training/upskilling, retention bonuses, overtime</li>
+          <li><b>Demand &lt; Supply</b> — hiring freeze, internal redeployment, voluntary exit programs, layoffs</li>
+          <li><b>Step zero</b> — analyse the current workforce + forecast both sides BEFORE choosing an action</li>
+          <li><b>Move</b> — the frame for PowerTech India (growth) and SolidTech (downsize) cases</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>The cases</h4>
+      <ul>
+        <li><b>Ricci &amp; Verona</b> — write the job description and specification; what KSAOs matter?</li>
+        <li><b>PowerTech India</b> — demand &gt; supply scenario; the recruitment menu</li>
+        <li><b>SolidTech</b> — demand &lt; supply; criteria for layoff selection</li>
+      </ul>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Diagnose any "broken role" by mapping it to Simons' four sliders — what's the missing supply or excess demand?</li>
+        <li>Use JCM to defend job enrichment over training/hiring when motivation is the bottleneck.</li>
+        <li>For any workforce-planning case, name the direction (Demand &gt; or &lt; Supply) first, then pull from the matching action menu.</li>
+        <li>Cite the validity hierarchy: structured interviews + ability tests beat unstructured chat and GPA (you'll need this in Block 3 too).</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 3                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block3" data-block="3">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter three · Block 3</div>
+    <h2><span class="num">03</span>From candidate to colleague — selection, socialization, training</h2>
+    <p class="lead">Now you fill the role. The principle: hire for what you <em>can't</em> train, train what you can — and remember that culture fit can be socialized but skill mismatch usually can't.</p>
+
+    <p>The block runs from defining the requirement (Armstrong) through measurement (validity, Big Five, cognitive tests), through onboarding (the three domains), to training (process model, Kirkpatrick). Cappelli's blunt verdict on unstructured interviews is the kind of cite that wins exam points.</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — building the workforce</div>
+      <div class="mm-center"><div class="mm-node-main">From candidate to colleague</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>Selection arc (Armstrong)</h5>
+          <ul>
+            <li>Define → Attract → Process → Select → Decide → Offer</li>
+            <li>Phases — Measurement → Decision → Evaluation</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>What actually predicts</h5>
+          <ul>
+            <li><b>GMA</b> (general mental ability) — #1 single predictor</li>
+            <li><b>Conscientiousness</b> — #1 personality predictor</li>
+            <li>Experience → self-efficacy</li>
+            <li><b>Cappelli</b> — unstructured interviews + GPA are weak</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>P-O vs P-J fit</h5>
+          <ul>
+            <li><b>P-O</b> = culture (socializable)</li>
+            <li><b>P-J</b> = skills (harder to retrain)</li>
+            <li>Over-P-O → homogeneity</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Interview types</h5>
+          <ul>
+            <li><b>Structured</b> &gt; unstructured (validity)</li>
+            <li><b>Situational</b> — hypothetical, for inexperienced</li>
+            <li><b>Behavioral (STAR)</b> — past behavior, for experienced</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Onboarding</h5>
+          <ul>
+            <li><b>3 domains</b> — Organization · Group · Task</li>
+            <li><b>Strategies</b> — sequential · individual · collective</li>
+            <li>Skip task domain → role clarity collapses</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Training &amp; development</h5>
+          <ul>
+            <li><b>Process</b> — Needs → Design → Implement → Evaluate</li>
+            <li><b>Kirkpatrick</b> — Reactions · Learning · Behavior · Results</li>
+            <li>Training ≠ development (current vs future)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Predictor hierarchy</span>
+        <span class="spotlight-author">Judge et al. (2007) meta-analysis</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Decades of evidence rank-order what actually predicts on-the-job performance — and tools you can't drop are surprisingly few.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- Bar chart -->
+            <text x="20" y="25" font-weight="700" fill="#1c1c1f">Predictive strength →</text>
+            <!-- bar 1 -->
+            <rect x="160" y="40" width="380" height="20" fill="#0d9488"/>
+            <text x="20" y="55" font-weight="600">Cognitive ability</text>
+            <text x="550" y="55" fill="#fff" text-anchor="end" font-weight="700">strongest</text>
+            <!-- bar 2 -->
+            <rect x="160" y="70" width="280" height="20" fill="#0d9488" opacity=".75"/>
+            <text x="20" y="85" font-weight="600">Conscientiousness</text>
+            <!-- bar 3 -->
+            <rect x="160" y="100" width="220" height="20" fill="#0d9488" opacity=".6"/>
+            <text x="20" y="115" font-weight="600">Experience</text>
+            <!-- bar 4 -->
+            <rect x="160" y="130" width="160" height="20" fill="#0d9488" opacity=".45"/>
+            <text x="20" y="145" font-weight="600">Structured interview</text>
+            <!-- bar 5 -->
+            <rect x="160" y="160" width="60" height="20" fill="#e11d48" opacity=".7"/>
+            <text x="20" y="175" font-weight="600">Unstructured · GPA</text>
+            <text x="550" y="175" fill="#e11d48" text-anchor="end" font-weight="700" font-size="11">weak (Cappelli)</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Move</b> — defend cognitive tests + conscientiousness over interviews and grades. Cite Cappelli (2019) to dismiss what most firms actually do.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Three domains of socialization</span>
+        <span class="spotlight-author">Block 3 deck</span>
+        <span class="spotlight-tag">Key</span>
+      </div>
+      <div class="spotlight-summary">Onboarding works in three layers — skip one and integration breaks.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <circle cx="200" cy="110" r="100" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5"/>
+            <circle cx="200" cy="110" r="65" fill="#fff" stroke="#0d9488" stroke-width="1.5"/>
+            <circle cx="200" cy="110" r="32" fill="#0d9488"/>
+            <text x="200" y="113" text-anchor="middle" font-weight="700" fill="#fff" font-size="12">Task</text>
+            <text x="200" y="60" text-anchor="middle" font-weight="700" fill="#0d9488">Group</text>
+            <text x="200" y="22" text-anchor="middle" font-weight="700" fill="#0d9488" font-size="13">Organization</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Organization</b> — values, mission, history, policies</li>
+          <li><b>Group/Department</b> — supervisor expectations, peer norms, team expertise</li>
+          <li><b>Task</b> — responsibilities, performance expectations, resources/tools</li>
+          <li><b>Move</b> — diagnose any onboarding failure by which layer was skipped</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Training Process Model</span>
+        <span class="spotlight-author">Block 3 deck</span>
+        <span class="spotlight-tag">Key</span>
+      </div>
+      <div class="spotlight-summary">A four-step cycle. Skip the first step and you design for the wrong gap.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- 4 boxes -->
+            <rect x="20" y="55" width="110" height="70" rx="8" fill="#fff" stroke="#0d9488"/>
+            <text x="75" y="85" text-anchor="middle" font-weight="700">Needs</text>
+            <text x="75" y="100" text-anchor="middle" font-size="10" fill="#6b7280">org · task · person</text>
+            <line x1="135" y1="90" x2="170" y2="90" stroke="#1c1c1f" marker-end="url(#a3)"/>
+            <rect x="170" y="55" width="110" height="70" rx="8" fill="#fff" stroke="#0d9488"/>
+            <text x="225" y="85" text-anchor="middle" font-weight="700">Design</text>
+            <text x="225" y="100" text-anchor="middle" font-size="10" fill="#6b7280">objectives · content</text>
+            <line x1="285" y1="90" x2="320" y2="90" stroke="#1c1c1f" marker-end="url(#a3)"/>
+            <rect x="320" y="55" width="110" height="70" rx="8" fill="#fff" stroke="#0d9488"/>
+            <text x="375" y="85" text-anchor="middle" font-weight="700">Implement</text>
+            <text x="375" y="100" text-anchor="middle" font-size="10" fill="#6b7280">delivery method</text>
+            <line x1="435" y1="90" x2="470" y2="90" stroke="#1c1c1f" marker-end="url(#a3)"/>
+            <rect x="470" y="55" width="110" height="70" rx="8" fill="#ccfbf1" stroke="#0d9488"/>
+            <text x="525" y="85" text-anchor="middle" font-weight="700">Evaluate</text>
+            <text x="525" y="100" text-anchor="middle" font-size="10" fill="#6b7280">Kirkpatrick 1–4</text>
+            <!-- Loop arrow -->
+            <path d="M 525 130 Q 525 165 75 165 Q 75 165 75 130" fill="none" stroke="#0d9488" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a3)"/>
+            <text x="300" y="178" text-anchor="middle" fill="#0d9488" font-size="10" font-style="italic">feedback loop</text>
+          </g>
+          <defs>
+            <marker id="a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#1c1c1f"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Kirkpatrick levels</b> — Reactions (liked it?) → Learning (knew it?) → Behavior (used it?) → Results (org impact?)</li>
+          <li><b>Move</b> — argue past Level 1; show how to evaluate behavior change and ROI</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull">
+      "Unstructured interviews and college grades are weak predictors of job performance — yet they're what most firms rely on. The fix isn't to add more interviews; it's to add structure and use ability tests."
+      <cite>Cappelli · 2019 · the predictor heresy</cite>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Open any selection question with the predictor hierarchy + Cappelli — the easiest way to look well-read.</li>
+        <li>Use P-O vs P-J fit to argue both diversity and skill — over-selecting for fit produces homogeneous teams.</li>
+        <li>Cite Kirkpatrick to push training evaluation past Level 1 (satisfaction surveys are not evaluation).</li>
+        <li>Diagnose onboarding failures by which of the three domains (org/group/task) got skipped.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 4                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block4" data-block="4">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter four · Block 4</div>
+    <h2><span class="num">04</span>Performance management &amp; appraisal</h2>
+    <p class="lead">Once people are in their roles, how do you tell them how they're doing — and what good looks like? Aguinis' framing is the cite that powers the whole block.</p>
+
+    <p>Block 4's central debate is sharper than its title: most firms do appraisal (once a year, HR-driven, past-focused) and call it management. The interesting design choices live in <em>how</em> you measure (BARS, BOS, MBO/SMART, 360, forced distribution), <em>against what</em> (traits, behaviors, outcomes), and <em>against whom</em> (absolute vs relative judgment).</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — measuring &amp; developing performance</div>
+      <div class="mm-center"><div class="mm-node-main">Performance management</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>The central frame</h5>
+          <ul>
+            <li><b>Aguinis</b> — Identify · Measure · Develop</li>
+            <li><b>The debate</b> — Appraisal (annual, past) vs Management (continuous, future)</li>
+            <li><b>Two uses</b> — administrative · developmental</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>What to measure</h5>
+          <ul>
+            <li><b>Traits</b> — risky (bias-prone)</li>
+            <li><b>Behaviors</b> — observable on the job</li>
+            <li><b>Outcomes</b> — results delivered</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>How to measure</h5>
+          <ul>
+            <li><b>BARS</b> — behavior-anchored numeric scales</li>
+            <li><b>BOS</b> — frequency of behaviors</li>
+            <li><b>MBO + SMART</b> — outcomes vs jointly-set goals</li>
+            <li><b>Mixed Standard</b> — keyed good/avg/poor</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Against whom</h5>
+          <ul>
+            <li><b>Absolute</b> — vs fixed standards</li>
+            <li><b>Relative</b> — ranking / forced distribution</li>
+            <li>Vitality Health: shift to relative</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Who rates</h5>
+          <ul>
+            <li><b>360 feedback</b> — peers, reports, supervisor</li>
+            <li>Risky in low-trust + high-stakes contexts</li>
+            <li>Alex Sander case</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Rater errors</h5>
+          <ul>
+            <li>Halo · Leniency · Central tendency</li>
+            <li>Contrast · Recency · Similar-to-me</li>
+            <li><b>Fix</b> — frame-of-reference training</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Appraisal vs Management — the Aguinis dial</span>
+        <span class="spotlight-author">Aguinis, Joo &amp; Gottfredson (2011) "Why we hate PM"</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Two ends of one dial. Most firms sit at the appraisal end and wonder why nobody likes the system.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- Left side: appraisal -->
+            <rect x="20" y="20" width="260" height="140" rx="10" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="150" y="42" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="13">APPRAISAL</text>
+            <text x="150" y="70" text-anchor="middle" font-weight="600" fill="#1c1c1f">Once a year</text>
+            <text x="150" y="90" text-anchor="middle" fill="#1c1c1f">HR-driven</text>
+            <text x="150" y="110" text-anchor="middle" fill="#1c1c1f">Past-focused</text>
+            <text x="150" y="130" text-anchor="middle" fill="#1c1c1f">Administrative</text>
+            <text x="150" y="150" text-anchor="middle" fill="#6b7280" font-style="italic" font-size="11">form-filling</text>
+            <!-- Right side: management -->
+            <rect x="320" y="20" width="260" height="140" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="450" y="42" text-anchor="middle" font-weight="700" fill="#15803d" font-size="13">MANAGEMENT</text>
+            <text x="450" y="70" text-anchor="middle" font-weight="600" fill="#1c1c1f">Continuous</text>
+            <text x="450" y="90" text-anchor="middle" fill="#1c1c1f">Line-manager-owned</text>
+            <text x="450" y="110" text-anchor="middle" fill="#1c1c1f">Future-focused</text>
+            <text x="450" y="130" text-anchor="middle" fill="#1c1c1f">Strategic / coaching</text>
+            <text x="450" y="150" text-anchor="middle" fill="#6b7280" font-style="italic" font-size="11">behavior-changing</text>
+            <!-- Arrow between -->
+            <line x1="280" y1="90" x2="320" y2="90" stroke="#1c1c1f" stroke-width="2"/>
+            <polygon points="320,90 312,86 312,94" fill="#1c1c1f"/>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>The diagnosis</b> — "we hate PM" usually means "we hate appraisal pretending to be management"</li>
+          <li><b>Deloitte</b> — replaced ratings with weekly check-ins + four future-focused statements (e.g. "I'd always want this person on my team")</li>
+          <li><b>Move</b> — whenever a case asks "why is the PM system failing?", diagnose which end of the dial it sits on</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Forced distribution — the Vitality Health move</span>
+        <span class="spotlight-author">Bingham &amp; Beer · case 913-501</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">A bell curve forces differentiation. Fixes inflation, breaks team cohesion. Use with care.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- Bell curve -->
+            <path d="M 60 150 Q 130 150 180 100 Q 230 30 300 30 Q 370 30 420 100 Q 470 150 540 150" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+            <line x1="60" y1="150" x2="540" y2="150" stroke="#1c1c1f"/>
+            <!-- 5 categories with vertical lines -->
+            <line x1="160" y1="60" x2="160" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="230" y1="40" x2="230" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="370" y1="40" x2="370" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <line x1="440" y1="60" x2="440" y2="150" stroke="#e11d48" stroke-dasharray="2,3"/>
+            <text x="110" y="170" text-anchor="middle" font-size="10" font-weight="700">U</text>
+            <text x="195" y="170" text-anchor="middle" font-size="10" font-weight="700">L</text>
+            <text x="300" y="170" text-anchor="middle" font-size="10" font-weight="700">A</text>
+            <text x="405" y="170" text-anchor="middle" font-size="10" font-weight="700">T</text>
+            <text x="490" y="170" text-anchor="middle" font-size="10" font-weight="700">NR</text>
+            <text x="300" y="20" text-anchor="middle" font-weight="700" fill="#e11d48">Vitality Health categories</text>
+            <text x="110" y="183" text-anchor="middle" font-size="9" fill="#6b7280">Unacceptable</text>
+            <text x="195" y="183" text-anchor="middle" font-size="9" fill="#6b7280">Low</text>
+            <text x="300" y="183" text-anchor="middle" font-size="9" fill="#6b7280">Achiever</text>
+            <text x="405" y="183" text-anchor="middle" font-size="9" fill="#6b7280">Top</text>
+            <text x="490" y="183" text-anchor="middle" font-size="9" fill="#6b7280">Not rated</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Vitality redesign</b> — 13 absolute rating levels → 5 relative categories + job-specific competencies + SMART objectives + common January cycle + short/long-term cash + equity</li>
+          <li><b>Risk</b> — a high-talent team is still forced to label someone "low"</li>
+          <li><b>Move</b> — defend or attack based on team-level effects, not just system-level inflation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull">
+      "Performance management is not appraisal. It is a continuous process of identifying, measuring and developing the performance of individuals and teams — and aligning it with the strategic goals of the organization."
+      <cite>Aguinis et al. · 2009</cite>
+    </div>
+
+    <div class="callout">
+      <h4>Rater errors to name (and how to fix)</h4>
+      <ul>
+        <li><b>Halo</b> — one trait colors all ratings · <b>Leniency / Severity</b> — too soft / too hard</li>
+        <li><b>Central tendency</b> — clusters everyone in the middle · <b>Contrast</b> — judging vs others just rated</li>
+        <li><b>Recency</b> — over-weights last few months · <b>Similar-to-me</b> — favors people like the rater</li>
+        <li><b>Fix</b> — frame-of-reference training calibrates raters and curbs systematic errors</li>
+      </ul>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Cite Aguinis to reframe "we hate PM" as "we do appraisal poorly". The fix is to move toward the management end of the dial.</li>
+        <li>For any rating-design case, name what's being measured (trait/behavior/outcome) AND how (absolute vs relative).</li>
+        <li>Use Vitality Health as your go-to case for moving from absolute to relative ranking — but flag the team-cohesion cost.</li>
+        <li>Argue 360 feedback only where culture supports honest peer feedback (Alex Sander = it didn't).</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 5                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block5" data-block="5">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter five · Block 5</div>
+    <h2><span class="num">05</span>Pay, incentives &amp; employment relations</h2>
+    <p class="lead">Pay is the loudest signal. Who you attract, who you keep, what they do — it's downstream of design choices about money.</p>
+
+    <p>Block 5 hands you Milkovich's Pay Model (the foundational diagnostic), the Total Returns split (cash is only part of the package), and Gerhart &amp; Rynes' under-cited insight that pay <em>also</em> sorts who walks in the door — not just how hard they work once inside. The cross-country comparator (Hall &amp; Soskice's VoC) explains why what works in Germany doesn't work in Texas.</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — pay design &amp; employment relations</div>
+      <div class="mm-center"><div class="mm-node-main">Pay &amp; rewards</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>The foundational model</h5>
+          <ul>
+            <li><b>Pay Model (Milkovich)</b> — objectives · policies · techniques</li>
+            <li><b>Objectives</b> — Efficiency · Fairness · Ethics · Compliance</li>
+            <li><b>Policies</b> — Internal · External · Contributions · Management</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>The reward mix</h5>
+          <ul>
+            <li><b>Total Returns</b> — transactional + relational</li>
+            <li>Direct vs Indirect compensation</li>
+            <li>WorldatWork — the practitioner version</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Pay for performance</h5>
+          <ul>
+            <li><b>Merit</b> — base lift (sticky)</li>
+            <li><b>Incentive</b> — re-earned, variable</li>
+            <li>BAG Grocers + Zero Wage cases</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Two pay effects</h5>
+          <ul>
+            <li><b>Incentive effect</b> — motivates who you have</li>
+            <li><b>Sorting effect</b> — changes who you attract</li>
+            <li>Gerhart &amp; Rynes: glass-installation study</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Pay structures</h5>
+          <ul>
+            <li><b>Narrow-graded</b> — hierarchical</li>
+            <li><b>Broad-graded</b> — flatter orgs</li>
+            <li><b>Job-family</b> — by occupation</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Country context</h5>
+          <ul>
+            <li><b>Hall &amp; Soskice</b> — CMEs vs LMEs</li>
+            <li>Likelihood-to-unionize matrix</li>
+            <li><b>Caveat Emptor</b> — useful? causation? alternatives?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">The Pay Model — three layers</span>
+        <span class="spotlight-author">Milkovich, Newman &amp; Gerhart</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Objectives drive policies, which drive techniques. Any pay system can be diagnosed against this stack.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- Top: Objectives -->
+            <polygon points="180,30 420,30 420,80 180,80" fill="#15803d"/>
+            <text x="300" y="50" text-anchor="middle" fill="#fff" font-weight="700" font-size="13">OBJECTIVES</text>
+            <text x="300" y="70" text-anchor="middle" fill="#fff" font-size="11">Efficiency · Fairness · Ethics · Compliance</text>
+            <!-- Middle: Policies -->
+            <polygon points="100,80 500,80 500,140 100,140" fill="#dcfce7" stroke="#15803d"/>
+            <text x="300" y="100" text-anchor="middle" font-weight="700" fill="#15803d">POLICIES</text>
+            <text x="300" y="118" text-anchor="middle" fill="#1c1c1f" font-size="10">Internal alignment · External competitiveness</text>
+            <text x="300" y="132" text-anchor="middle" fill="#1c1c1f" font-size="10">Employee contributions · Management</text>
+            <!-- Bottom: Techniques -->
+            <polygon points="20,140 580,140 580,200 20,200" fill="#fff" stroke="#15803d"/>
+            <text x="300" y="160" text-anchor="middle" font-weight="700" fill="#15803d">TECHNIQUES</text>
+            <text x="300" y="178" text-anchor="middle" fill="#1c1c1f" font-size="10">Job analysis · Salary surveys · Pay structures</text>
+            <text x="300" y="192" text-anchor="middle" fill="#1c1c1f" font-size="10">Performance pay · Communication</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Sorting effect vs Incentive effect</span>
+        <span class="spotlight-author">Gerhart &amp; Rynes</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Pay shapes performance through two mechanisms. Most discussions forget the second one — and Gerhart's evidence says it's the bigger lever.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- Left -->
+            <rect x="20" y="30" width="260" height="140" rx="10" fill="#fef3c7" stroke="#d97706"/>
+            <text x="150" y="55" text-anchor="middle" font-weight="700" fill="#d97706">INCENTIVE EFFECT</text>
+            <text x="150" y="90" text-anchor="middle" fill="#1c1c1f">Pay motivates the people</text>
+            <text x="150" y="110" text-anchor="middle" fill="#1c1c1f">you already have to</text>
+            <text x="150" y="130" text-anchor="middle" fill="#1c1c1f">work harder.</text>
+            <text x="150" y="158" text-anchor="middle" fill="#6b7280" font-style="italic">"how hard you work"</text>
+            <!-- Right -->
+            <rect x="320" y="30" width="260" height="140" rx="10" fill="#dcfce7" stroke="#15803d"/>
+            <text x="450" y="55" text-anchor="middle" font-weight="700" fill="#15803d">SORTING EFFECT</text>
+            <text x="450" y="90" text-anchor="middle" fill="#1c1c1f">Pay attracts and retains</text>
+            <text x="450" y="110" text-anchor="middle" fill="#1c1c1f">different types of</text>
+            <text x="450" y="130" text-anchor="middle" fill="#1c1c1f">employees (self-selection).</text>
+            <text x="450" y="158" text-anchor="middle" fill="#6b7280" font-style="italic">"who walks in the door"</text>
+          </g>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Evidence</b> — 44% productivity rise in the glass-installation piece-rate study; the majority came from <em>sorting</em>, not incentive</li>
+          <li><b>Move</b> — argue pay design changes <em>who</em> you have, not only how hard they work. The killer counter-move to "money doesn't motivate"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Total Returns — the full reward mix</span>
+        <span class="spotlight-author">Ch1 Pay Model</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Reward = cash + benefits + relational returns. Pay alone is a thin lever.</div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Total Compensation (transactional)</b> — base · merit/COLA · short and long-term incentives · benefits</li>
+          <li><b>Relational/Psychological Returns</b> — recognition · employment security · challenging work · learning · leadership opportunities</li>
+          <li><b>Move</b> — when pay alone can't fix a retention problem, design the whole return mix</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pull">
+      "The glass-installation firm raised productivity 44% by shifting to piece-rate. Most of that gain came not from existing workers trying harder — but from better workers self-selecting in and weaker ones leaving."
+      <cite>Gerhart &amp; Rynes · the sorting story</cite>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Open any compensation question by naming the Pay Model's three layers (objectives → policies → techniques) — instant structure.</li>
+        <li>Distinguish merit (base lift, sticky) from incentive (re-earned, variable) every time pay-for-performance comes up.</li>
+        <li>Invoke the sorting effect whenever someone says "but money doesn't really motivate". The data disagrees.</li>
+        <li>Use VoC (Hall &amp; Soskice) to explain why "the right" pay system is country-specific. German practice ≠ US practice.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  BLOCK 6                                                                  -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<article class="chapter" id="block6" data-block="6">
+  <div class="container">
+    <div class="chapter-eyebrow">Chapter six · Block 6</div>
+    <h2><span class="num">06</span>Unions, collective bargaining &amp; the high road</h2>
+    <p class="lead">Pfeffer's quiet provocation: good HR doesn't replace unions. Sometimes it needs them.</p>
+
+    <p>Block 6 inverts the conventional wisdom. The standard claim ("good management makes unions unnecessary") becomes the thesis Pfeffer dismantles. Unions raise wages — but feedback effects (skill, lower turnover, capital investment) often offset the cost. And contracts lock in high-commitment practices that would otherwise erode under cost pressure.</p>
+
+    <!-- Mindmap -->
+    <div class="mindmap">
+      <div class="mindmap-title">Mindmap — unions, bargaining &amp; strategy</div>
+      <div class="mm-center"><div class="mm-node-main">Unions &amp; HPWS</div></div>
+      <div class="mm-branches">
+        <div class="mm-branch">
+          <h5>The reframe (Pfeffer)</h5>
+          <ul>
+            <li><b>Conventional wisdom</b> — "good HR forestalls unions"</li>
+            <li><b>Pfeffer's challenge</b> — even good HR doesn't make unions redundant</li>
+            <li>Unions can sustain HPWS</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Union wage effects</h5>
+          <ul>
+            <li>Wages rise — but feedback effects offset</li>
+            <li>Skilled workers attracted</li>
+            <li>Lower turnover · capital investment</li>
+            <li>Profit hit bites mainly under monopoly</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>High road / Low road</h5>
+          <ul>
+            <li><b>Low</b> — compete on cost (unwinnable for advanced economies)</li>
+            <li><b>High</b> — compete on innovation + productivity via HPWS</li>
+            <li>Union backing makes high road durable</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>HPWS + unions</h5>
+          <ul>
+            <li>Contracts entrench training, teams, security</li>
+            <li>Cases: Ford · Saturn · Kaiser-Permanente</li>
+            <li>Prevents "backsliding" under cost pressure</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Bargaining</h5>
+          <ul>
+            <li>Power-sharing &amp; joint problem-solving</li>
+            <li>Negotiation → tentative deal → ratification vote</li>
+            <li>Tepperman's: 23-4 rejection</li>
+          </ul>
+        </div>
+        <div class="mm-branch">
+          <h5>Inequality angle</h5>
+          <ul>
+            <li>Egalitarian ethos compresses wages</li>
+            <li>Lower discrimination by race/gender</li>
+            <li>Wide dispersion harms performance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>The frameworks worth knowing cold</h3>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">Pfeffer's feedback loop</span>
+        <span class="spotlight-author">Pfeffer (drawing on Freeman &amp; Medoff)</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Higher union wages → skilled workers attracted → lower turnover → capital investment → productivity rises → wage cost offset.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="11">
+            <!-- 4 boxes in a circle/loop -->
+            <rect x="20" y="80" width="120" height="60" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="80" y="105" text-anchor="middle" font-weight="700" fill="#7c3aed">Higher wages</text>
+            <text x="80" y="122" text-anchor="middle" font-size="10" fill="#1c1c1f">(union effect)</text>
+
+            <rect x="170" y="20" width="120" height="60" rx="8" fill="#fff" stroke="#7c3aed"/>
+            <text x="230" y="45" text-anchor="middle" font-weight="700">Skill ↑</text>
+            <text x="230" y="62" text-anchor="middle" font-size="10" fill="#1c1c1f">turnover ↓</text>
+
+            <rect x="320" y="20" width="120" height="60" rx="8" fill="#fff" stroke="#7c3aed"/>
+            <text x="380" y="45" text-anchor="middle" font-weight="700">Capital ↑</text>
+            <text x="380" y="62" text-anchor="middle" font-size="10" fill="#1c1c1f">training ↑</text>
+
+            <rect x="460" y="80" width="120" height="60" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="520" y="105" text-anchor="middle" font-weight="700" fill="#7c3aed">Productivity ↑</text>
+            <text x="520" y="122" text-anchor="middle" font-size="10" fill="#1c1c1f">offsets cost</text>
+
+            <!-- Arrows -->
+            <path d="M 140 90 Q 160 55 170 50" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a4)"/>
+            <line x1="290" y1="50" x2="320" y2="50" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a4)"/>
+            <path d="M 440 50 Q 460 55 460 90" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#a4)"/>
+            <path d="M 460 130 Q 300 180 140 130" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a4)"/>
+            <text x="300" y="178" text-anchor="middle" font-size="10" fill="#7c3aed" font-style="italic">feedback offset</text>
+          </g>
+          <defs>
+            <marker id="a4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 z" fill="#7c3aed"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <div class="spotlight-body">
+        <ul>
+          <li><b>Boundary condition</b> — union profit-effects matter mainly where firms hold monopoly power</li>
+          <li><b>Move</b> — defend that the wage-vs-profit trade-off is overstated; cite the feedback mechanisms</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spotlight">
+      <div class="spotlight-head">
+        <span class="spotlight-name">High Road vs Low Road</span>
+        <span class="spotlight-author">Pfeffer</span>
+        <span class="spotlight-tag">Core</span>
+      </div>
+      <div class="spotlight-summary">Two competitive paths. Only one is sustainable for advanced economies — and union backing makes it durable.</div>
+      <div class="spotlight-viz">
+        <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="Inter, sans-serif" font-size="12">
+            <!-- Y junction -->
+            <line x1="300" y1="160" x2="300" y2="120" stroke="#1c1c1f" stroke-width="2"/>
+            <line x1="300" y1="120" x2="120" y2="40" stroke="#e11d48" stroke-width="2"/>
+            <line x1="300" y1="120" x2="480" y2="40" stroke="#7c3aed" stroke-width="2"/>
+            <!-- Low road -->
+            <rect x="20" y="20" width="200" height="50" rx="8" fill="#ffe4e6" stroke="#e11d48"/>
+            <text x="120" y="40" text-anchor="middle" font-weight="700" fill="#e11d48">LOW ROAD</text>
+            <text x="120" y="58" text-anchor="middle" fill="#1c1c1f" font-size="10">compete on labor cost</text>
+            <text x="120" y="88" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">unwinnable for advanced economies</text>
+            <!-- High road -->
+            <rect x="380" y="20" width="200" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="480" y="40" text-anchor="middle" font-weight="700" fill="#7c3aed">HIGH ROAD</text>
+            <text x="480" y="58" text-anchor="middle" fill="#1c1c1f" font-size="10">compete via HPWS · innovation</text>
+            <text x="480" y="88" text-anchor="middle" fill="#6b7280" font-size="10" font-style="italic">union backing makes it sustainable</text>
+            <!-- Fork base -->
+            <text x="300" y="180" text-anchor="middle" font-weight="600" fill="#1c1c1f">Strategic choice</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="pull">
+      "Unionization is not antithetical to but positively associated with high-commitment work practices. The contracts lock in training, teams, job security, information sharing — preventing the backsliding that would otherwise occur under cost pressure."
+      <cite>Pfeffer · the reframe</cite>
+    </div>
+
+    <div class="callout">
+      <h4>The cases worth remembering</h4>
+      <ul>
+        <li><b>Ford / Saturn / Kaiser-Permanente</b> — union + HPWS coexistence and synergy</li>
+        <li><b>Kaiser-Permanente partnership</b> — cooperative bargaining → lower patient mortality (unionized nurses)</li>
+        <li><b>Tepperman's</b> — tentative deal rejected 23-4 by members; back to bargaining (or strike)</li>
+      </ul>
+    </div>
+
+    <div class="moves">
+      <h4>Exam moves</h4>
+      <ul>
+        <li>Frame any unions question as a "low road vs high road" strategic choice. The high road needs HPWS; HPWS needs durability; unions provide it.</li>
+        <li>Cite Pfeffer's feedback effects to dismantle "unions kill profits" — the trade-off is mediated by productivity gains.</li>
+        <li>Defend partnership-style labor relations (Kaiser-Permanente) over adversarial bargaining — adversarial shrinks the joint gains.</li>
+        <li>Use the egalitarian-ethos argument when an essay drifts to inequality — unions compress dispersion, which often <em>improves</em> performance.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!--  AUTHORS TIMELINE                                                         -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<section class="timeline-section" id="timeline">
+  <div class="container">
+    <div class="section-label">§ Closing · The authors timeline</div>
+    <h2>Six decades of HRM thought</h2>
+    <p class="lead">Where the ideas came from. Anchor a citation by decade — examiners notice when you know when an idea entered the field.</p>
+
+    <div class="timeline">
+      <div class="tl-decade">
+        <h4>1960s — foundations</h4>
+        <ul>
+          <li><b>Blake &amp; Mouton</b> — the Managerial Grid (people vs task)</li>
+          <li><b>Drucker</b> — Management by Objectives (MBO)</li>
+        </ul>
+      </div>
+      <div class="tl-decade">
+        <h4>1970s — job design</h4>
+        <ul>
+          <li><b>Hackman &amp; Oldham</b> — Job Characteristics Model + MPS</li>
+        </ul>
+      </div>
+      <div class="tl-decade">
+        <h4>1980s — the maps appear</h4>
+        <ul>
+          <li><b>Beer, Spector, Lawrence, Mills &amp; Walton (1984)</b> — Harvard Model</li>
+          <li><b>Fombrun, Tichy &amp; Devanna (1984)</b> — Michigan Model</li>
+          <li><b>Deci &amp; Ryan (1985)</b> — Self-Determination Theory</li>
+          <li><b>Hobfoll (1989)</b> — Conservation of Resources</li>
+          <li><b>Blanz &amp; Ghiselli (1972)</b> — Mixed Standard Scale (earlier, but Block 4)</li>
+        </ul>
+      </div>
+      <div class="tl-decade">
+        <h4>1990s — measuring people</h4>
+        <ul>
+          <li><b>Meyer &amp; Allen (1991)</b> — Three-Component Commitment</li>
+          <li><b>Latham &amp; Sue-Chan (1996)</b> — Situational vs Behavioral interviews</li>
+        </ul>
+      </div>
+      <div class="tl-decade">
+        <h4>2000s — comparative + meta-analytic</h4>
+        <ul>
+          <li><b>Hall &amp; Soskice (2001)</b> — Varieties of Capitalism (CMEs vs LMEs)</li>
+          <li><b>Schaufeli &amp; Bakker (2004)</b> — Work Engagement (Vigor · Dedication · Absorption)</li>
+          <li><b>Cropanzano &amp; Mitchell (2005)</b> — Social Exchange Theory in HRM</li>
+          <li><b>Judge et al. (2007)</b> — Meta-analytic predictors of performance</li>
+          <li><b>Aguinis et al. (2009)</b> — PM Cycle</li>
+        </ul>
+      </div>
+      <div class="tl-decade">
+        <h4>2010s — the modern frame</h4>
+        <ul>
+          <li><b>Campion et al. (2011)</b> — Competency modeling (KSAOs)</li>
+          <li><b>Aguinis, Joo &amp; Gottfredson (2011)</b> — "Why we hate PM"</li>
+          <li><b>Goffee &amp; Jones (HBR 2013)</b> — DREAMS / Best Workplace on Earth</li>
+          <li><b>Beer, Boselie &amp; Brewster (2015)</b> — Multistakeholder HRM</li>
+          <li><b>Cappelli (2019)</b> — Weak predictors (interviews, grades)</li>
+          <li><b>Doshi &amp; McGregor</b> — Total Motivation (ToMo)</li>
+          <li><b>Pfeffer</b> — Unions and HPWS (the Block 6 reading)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:48px">
+      <h4>One caveat</h4>
+      <p style="font-family:var(--sans);font-size:.92rem;margin:0">The color coding throughout this companion (🔵 by block, importance signals in the cheat sheet) is a <em>memory hook</em>, not a fixed taxonomy. Importance shifts with the exam question — a "supporting" framework can be the killer cite if the prompt happens to be about it. Don't let the colour decide what you actually write.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Built from class slides + assigned readings + the framework cheat sheet. Companion to the <a href="mcq_trainer.html">MCQ trainer</a> and <a href="frameworks_cheatsheet.pdf">PDF cheat sheet</a>.</p>
+    <p style="margin-top:8px"><a href="https://github.com/lorepini/people-management">github.com/lorepini/people-management</a></p>
+  </div>
+</footer>
+
+<script>
+// ── Sticky nav: highlight current section as user scrolls ─────────────────
+const sections = document.querySelectorAll('section, article.chapter');
+const links = document.querySelectorAll('.nav-link');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting){
+      const id = e.target.id;
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+sections.forEach(s => s.id && obs.observe(s));
+</script>
+
+</body>
+</html>
